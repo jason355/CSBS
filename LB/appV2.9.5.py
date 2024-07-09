@@ -1,6 +1,6 @@
 import os, sys
-from implementV2_9_4 import Teacher, Bot
-import databaseV2_9_4 as db
+from implementV2_9_5 import Teacher, Bot
+import databaseV2_9_5 as db
 from urllib.parse import parse_qsl
 from linebot.models import  FollowEvent, MessageEvent, TextMessage, TextSendMessage, UnfollowEvent, PostbackEvent, FileMessage
 from linebot.exceptions import InvalidSignatureError
@@ -23,8 +23,6 @@ handler = WebhookHandler(channel_secret) # 建立 webhook 實例
 
 
 users = {} # 初始化 users
-global pattern # 班級號碼辨識全域變數
-global AdminConfirmPatter # 管理員認證辨識全域變數
 Manager = Bot(line_bot_api, db, users) # Bot 實例 在 implement 中定義
 
 # # 班級列表
@@ -33,7 +31,7 @@ Manager = Bot(line_bot_api, db, users) # Bot 實例 在 implement 中定義
 # # 年級列表
 # grade_list = ['1', '2', '3', '4', '5','7', '8', '9']
 
-errorText = "*An Error in appV2.9.4" # 錯誤訊息基本文字
+errorText = "*An Error in appV2.9.5" # 錯誤訊息基本文字
 # error_messages = [] # 錯誤訊息 List
 global errorIndex # 錯誤訊息索引值紀錄
 errorIndex = 1 # 初始化索引值
@@ -81,7 +79,7 @@ def show_errors():
     error_messages = Manager.getErrorList()     # 取得在implement 中的error List
     return render_template('errors.html', errors=error_messages) # 渲染畫面顯示error list
 
-@app.route('/classList', methods=['GET'])
+@app.route('/classlist', methods=['GET'])
 def showClassList():
     try:
         codeList = db.getClassCodeList()

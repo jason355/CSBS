@@ -1,7 +1,7 @@
 import re
 from linebot.models import  TextSendMessage, PostbackTemplateAction, TemplateSendMessage, ButtonsTemplate, PostbackAction, DatetimePickerTemplateAction,MessageAction, URIAction
 from datetime import date, timedelta
-import imple_toolV2_9_4 as t
+import imple_toolV2_9_5 as t
 import copy
 from datetime import datetime
 import sys
@@ -15,7 +15,7 @@ group_index = [-1, 4, 9, 14, 20, 26, 32]
 grade_list = ['1', '2', '3', '4', '5','7', '8', '9']
 dataTemplate = {'content':"", 'classLs': [], 'classStr': "", 'des_class': "", 'des_grade': "", 'finish_date':"", 'sound':""}
 BreakList = {}
-errorText = "*An Error in implementV2_9_4"
+errorText = "*An Error in implementV2_9_5"
 contactInfo = "{contactInfo}"
 error_messages  = []
 global errorIndex
@@ -1295,7 +1295,7 @@ class Bot():
                             self.api.reply_message(event.reply_token, TextSendMessage(text="⚠️資料庫連線錯誤，請在試一次"))
                             return
                         except Exception as e:
-                            error = f"{errorText}-implementV2_9-handleAdmin1()-self.db.DelTeacherData()\n{e}"
+                            error = f"{errorText}-handleAdmin1()-self.db.DelTeacherData()\n{e}"
                             print(error)
                             self.addError(error)
                             self.users[user_id].status = "ACs"
@@ -1337,7 +1337,7 @@ class Bot():
                                 Admin, TextSendMessage(text=reply_message))
                             else:
                                 prestatus = self.users[Admin].preStatus
-                                if prestatus != None:
+                                if prestatus != None and prestatus != "ACs":
                                     self.users[Admin].status = prestatus
                                 else:
                                     self.users[Admin].status = "Fs"
