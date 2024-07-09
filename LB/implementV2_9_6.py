@@ -63,7 +63,7 @@ class Bot():
                 alt_text='按鈕樣板',
                 template=ButtonsTemplate(
                     title='請選擇服務：',
-                    thumbnail_image_url = "https://raw.githubusercontent.com/jason355/SWBS/main/img1.png",
+                    thumbnail_image_url = "https://raw.githubusercontent.com/jason355/CSBS/master/LB/templates/image/favicon.png",
                     text='請務必先點選"教師個人資訊"按鈕以設定身分',
                     actions=[
                         PostbackTemplateAction(
