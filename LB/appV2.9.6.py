@@ -1,12 +1,13 @@
 import os, sys
-from implementV2_9_5 import Teacher, Bot
-import databaseV2_9_5 as db
+from implementV2_9_6 import Teacher, Bot
+import databaseV2_9_6 as db
 from urllib.parse import parse_qsl
 from linebot.models import  FollowEvent, MessageEvent, TextMessage, TextSendMessage, UnfollowEvent, PostbackEvent, FileMessage
 from linebot.exceptions import InvalidSignatureError
 from linebot import LineBotApi, WebhookHandler
 from flask import Flask, request, abort, jsonify, render_template
 from werkzeug.serving import make_server
+from sqlalchemy import exc
 
 
 
@@ -25,13 +26,8 @@ handler = WebhookHandler(channel_secret) # 建立 webhook 實例
 users = {} # 初始化 users
 Manager = Bot(line_bot_api, db, users) # Bot 實例 在 implement 中定義
 
-# # 班級列表
-# class_list = ['701', '702', '703', '704', '705', '706', '801', '802', '803', '804', '805', '806', '901', '902', '903', '904', '905',
-#               '906', '101', '102', '103', '104', '105', '106', '111', '112', '113', '114', '115', '116', '121', '122', '123', '124', '125', '126']
-# # 年級列表
-# grade_list = ['1', '2', '3', '4', '5','7', '8', '9']
 
-errorText = "*An Error in appV2.9.5" # 錯誤訊息基本文字
+errorText = "*An Error in appV2.9.6" # 錯誤訊息基本文字
 # error_messages = [] # 錯誤訊息 List
 global errorIndex # 錯誤訊息索引值紀錄
 errorIndex = 1 # 初始化索引值
@@ -45,8 +41,11 @@ def callback(): # 定義一個名為callback的函數
     body = request.get_data(as_text=True) # 從請求中獲取數據，並將其作為文本返回
     try: 
         handler.handle(body, signature) # 調用handler的handle方法來處理請求
-    except InvalidSignatureError: # 如果簽名無效，則觸發InvalidSignatureError異常
+    except InvalidSignatureError as Invalid: # 如果簽名無效，則觸發InvalidSignatureError異常
+        print(Invalid)
         abort(400)  # 返回HTTP狀態碼400，表示請求無效
+    except Exception as e:
+        print(e)
     return 'OK'  # 返回OK字串，表示請求已經成功處理
 
 # 訊息傳輸失敗回傳
@@ -182,6 +181,7 @@ def handle_postback(event):
         office = input("請輸入管理員所在組別> ")
         try:
             db.insertAdmin(user_id, {'name':name, 'office':office, 'verifyStat':1, 'isAdmin':1})
+        
         except Exception as e:
             print(f"*An Error: {e}")
             Manager.addError(e)
@@ -197,21 +197,32 @@ def handle_postback(event):
                 Manager.users[user_id].office = teacher.office
                 if teacher.isAdmin == 1:
                     Manager.users[user_id].isAdm = 1
+
+                get = backdata.get('action') # 取得action
+                handler = action_handlers.get(get) # 取得action對應函數
+                if handler:
+                    handler(event, user_id)
             else:
                 Manager.users[user_id].status = "FSs1"
                 reply_message =  "老師好, 請輸入您的名稱"
                 line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=reply_message))
+                
+        except exc.OperationalError as oe:
+                line_bot_api.api.reply_message(event.reply_token, TextSendMessage(text="⚠️伺服器連線錯誤，請再試一次"))
+
         except Exception as e:
             print(f"{errorText}-handle_message()\n{e}")
             Manager.addError(e)
             reply_message = "資料庫異常，請再試一次或是洽詢 #9611資訊組"
             line_bot_api.push_message(user_id, TextSendMessage(text=reply_message))
 
-    get = backdata.get('action') # 取得action
-    handler = action_handlers.get(get) # 取得action對應函數
-    if handler:
-        handler(event, user_id)
+    else:
+        get = backdata.get('action') # 取得action
+        handler = action_handlers.get(get) # 取得action對應函數
+        if handler:
+            handler(event, user_id)
+        
         
 
 
@@ -262,6 +273,11 @@ def handle_message(event):
                 Manager.users[user_id].office = teacher.office
                 if teacher.isAdmin == 1:
                     Manager.users[user_id].isAdm = 1
+
+                status = Manager.users[user_id].status # 取得用戶狀態
+                handler = status_handlers.get(status) # 取得對應函數
+                if handler:
+                    handler(event, user_id, text)
             else:
                 Manager.users[user_id].status = "FSs1"
                 reply_message =  "老師好, 請輸入您的名稱"
@@ -273,13 +289,11 @@ def handle_message(event):
             reply_message = "資料庫異常，請再試一次或是洽詢 #9611資訊組"
             line_bot_api.push_message(user_id, TextSendMessage(text=reply_message))
 
-
-    status = Manager.users[user_id].status # 取得用戶狀態
- 
-    handler = status_handlers.get(status) # 取得對應函數
-
-    if handler:
-        handler(event, user_id, text)
+    else: 
+        status = Manager.users[user_id].status # 取得用戶狀態
+        handler = status_handlers.get(status) # 取得對應函數
+        if handler:
+            handler(event, user_id, text)
         
 
 

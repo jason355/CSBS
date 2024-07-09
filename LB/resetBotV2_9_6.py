@@ -15,7 +15,7 @@ def start():
 
 should_start_process = input("start?(y/n): ").lower() == 'y'
 
-file_name = "appV2.9.5.py"   # input("輸入啟動檔案名稱> ")
+file_name = "appV2.9.6.py"   # input("輸入啟動檔案名稱> ")
 
 if should_start_process:
 

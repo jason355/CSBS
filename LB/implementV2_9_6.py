@@ -1,7 +1,7 @@
 import re
 from linebot.models import  TextSendMessage, PostbackTemplateAction, TemplateSendMessage, ButtonsTemplate, PostbackAction, DatetimePickerTemplateAction,MessageAction, URIAction
 from datetime import date, timedelta
-import imple_toolV2_9_5 as t
+import imple_toolV2_9_6 as t
 import copy
 from datetime import datetime
 import sys
@@ -15,7 +15,7 @@ group_index = [-1, 4, 9, 14, 20, 26, 32]
 grade_list = ['1', '2', '3', '4', '5','7', '8', '9']
 dataTemplate = {'content':"", 'classLs': [], 'classStr': "", 'des_class': "", 'des_grade': "", 'finish_date':"", 'sound':""}
 BreakList = {}
-errorText = "*An Error in implementV2_9_5"
+errorText = "*An Error in implementV2_9_6"
 contactInfo = "{contactInfo}"
 error_messages  = []
 global errorIndex
