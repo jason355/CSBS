@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSBS 班級列表</title>
+
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+        /* 增加一些樣式來美化表格 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 3px solid #9c9c9c;
+        }
+
+        th {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+
+<h2>CSBS 班級列表</h2>
+
+<table>
+  <tr>
+    <th>班級代碼</th>
+    <th>班級名稱</th>
+  </tr>
+  {% for i in range(length) %}
+  <tr>
+    <td>{{ codeList[i] }}</td>
+    <td>{{ nameList[i] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+</body>
+</html>
