@@ -1,9 +1,7 @@
+
+# version 2.9.6
 import subprocess
 import time
-
-
-
-
 
 child_process = None  # 初始化全局變數
 
@@ -13,11 +11,10 @@ def start():
     child_process = subprocess.Popen(['python', file_name])
     child_process.wait()
 
-should_start_process = input("start?(y/n): ").lower() == 'y'
 
-file_name = "appV2.9.6.py"   # input("輸入啟動檔案名稱> ")
+file_name = "./LB/appV2.9.7.py"   # input("輸入啟動檔案名稱> ")
 
-if should_start_process:
+if True:
 
     try:
         while True:

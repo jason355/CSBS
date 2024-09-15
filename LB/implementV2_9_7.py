@@ -1,11 +1,14 @@
+
+# version 2.9.7
 import re
 from linebot.models import  TextSendMessage, PostbackTemplateAction, TemplateSendMessage, ButtonsTemplate, PostbackAction, DatetimePickerTemplateAction,MessageAction, URIAction
 from datetime import date, timedelta
-import imple_toolV2_9_6 as t
+import imple_toolV2_9_7 as t
 import copy
 from datetime import datetime
 import sys
 from sqlalchemy import exc
+import requests
  
 
 pattern = r'(\d+)[, ]*'
@@ -23,7 +26,19 @@ errorIndex = 1
 global ExamStatus
 ExamStatus = False
 
-webhook_url = input("請輸入 ngrok 網址> ")
+# webhook_url = input("請輸入 ngrok 網址> ")
+# Query ngrok's local API to get the public URL
+url = "http://127.0.0.1:4040/api/tunnels"
+response = requests.get(url)
+data = response.json()
+
+
+# Extract the public URL
+webhook_url = data['tunnels'][0]['public_url']
+print(f"ngrok URL: {webhook_url}")
+
+
+
 
 t.make_break(BreakList) # 建立下課列表
 
@@ -45,6 +60,16 @@ class Bot():
         self.db = database
         self.users = users 
         self.Confirm_List = Confirm_List
+
+    
+    
+    # 傳送連結至管理員
+    def send_link_to_admin(self):
+        adminList = self.db.findAdmin()
+        for admin in adminList:
+            self.api.push_message(admin, TextSendMessage(text= f"Linebot 已啟動，請至 https://developers.line.biz/console/channel/2000168053/messaging-api 更新\nLink: {webhook_url}"))
+
+
 
     # 傳送錯誤至錯誤網頁
     def addError(self, e):

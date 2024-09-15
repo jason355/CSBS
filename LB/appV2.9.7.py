@@ -1,6 +1,6 @@
 import os, sys
-from implementV2_9_6 import Teacher, Bot
-import databaseV2_9_6 as db
+from implementV2_9_7 import Teacher, Bot
+import databaseV2_9_7 as db
 from urllib.parse import parse_qsl
 from linebot.models import  FollowEvent, MessageEvent, TextMessage, TextSendMessage, UnfollowEvent, PostbackEvent, FileMessage
 from linebot.exceptions import InvalidSignatureError
@@ -32,6 +32,9 @@ errorText = "*An Error in appV2.9.6" # 錯誤訊息基本文字
 global errorIndex # 錯誤訊息索引值紀錄
 errorIndex = 1 # 初始化索引值
 
+
+
+Manager.send_link_to_admin()
 
 
 # 處理callback事項
@@ -78,7 +81,7 @@ def show_errors():
     error_messages = Manager.getErrorList()     # 取得在implement 中的error List
     return render_template('errors.html', errors=error_messages) # 渲染畫面顯示error list
 
-@app.route('/classlist', methods=['GET'])
+@app.route('/classList', methods=['GET'])
 def showClassList():
     try:
         codeList = db.getClassCodeList()
@@ -152,7 +155,7 @@ action_handlers = {
     "@sound_yes": lambda event, user_id: (Manager.users[user_id].data.update({"sound": "1"}),setattr(Manager.users[user_id], 'status', 'Cs'), Manager.sendConfirm(event, user_id)) if Manager.users[user_id].status == 'Bs4' else None,
     "@sound_no": lambda event, user_id: (Manager.users[user_id].data.update({"sound": "0"}),setattr(Manager.users[user_id], 'status', 'Cs'), Manager.sendConfirm(event, user_id)) if Manager.users[user_id].status == 'Bs4' else None,
     "@Adm_func": lambda event, user_id: Manager.cmd_button(event, user_id) if Manager.users[user_id].status == 'Fs' else None,
-    "@reset_yes": lambda event, user_id: (print("****Server Shuting Down****"), [line_bot_api.push_message(teacher, TextSendMessage(text="⚠️系統即將重新啟動，請稍後再試")) for teacher in db.GetAllTeacherID() if teacher != user_id], sys.exit()) if Manager.users[user_id].status == 'Rs' else None,
+    "@reset_yes": lambda event, user_id: (print("****Server Shuting Down****"),[line_bot_api.push_message(teacher, TextSendMessage(text="⚠️系統即將重新啟動，請稍後再試")) for teacher in db.GetAllTeacherID() if teacher != user_id],  sys.exit(0)) if Manager.users[user_id].status == 'Rs' else None, # 
     "@reset_no": lambda event, user_id: (setattr(Manager.users[user_id], 'status', 'Fs'), line_bot_api.reply_message(event.reply_token, TextSendMessage(text="已取消"))) if Manager.users[user_id].status == 'Rs' else None,
     "@del_yes": lambda event, user_id: (setattr(Manager.users[user_id], 'status', 'Fs'), [line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_message)) for reply_message in [f"已刪除 {rows}筆資料" if rows > 0 else "無資料可刪除" if rows == 0 else f"錯誤:{rows}" for rows in [db.DelDataAll()]]]) if Manager.users[user_id].status == 'Ds' else None,
     "@del_no": lambda event, user_id: (setattr(Manager.users[user_id], 'status', 'Fs'), line_bot_api.reply_message(event.reply_token, TextSendMessage(text="已取消"))) if Manager.users[user_id].status == 'Ds' else None,
