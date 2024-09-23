@@ -39,7 +39,15 @@ async def check_server(uri):
 def cleanup_old_process():
     try:
         print("Cleaning up old processes...")
-        subprocess.call(["taskkill", "/F", "/IM", r"C:\Users\yuxia\SWBS\server\py-server demo\V2.5\Websocket_V2.5.py"])
+        process_name = r"C:\Users\yuxia\SWBS\server\py-server demo\V2.5\Websocket_V2.5.py"
+        tasklist_output = subprocess.check_output(f'tasklist /FI "IMAGENAME eq python.exe"', shell=True).decode()
+        
+        if process_name in tasklist_output:
+            print(f"Found running process: {process_name}, attempting to terminate...")
+            subprocess.call(["taskkill", "/F", "/IM", "python.exe"])
+            print("Process terminated successfully.")
+        else:
+            print(f"No running process found for: {process_name}.")
     except Exception as e:
         print(f"Failed to clean up old processes: {e}")
 
@@ -83,18 +91,24 @@ async def monitor_server(uri, check_interval, restart_command):
             print("Monitoring task cancelled.")
             break
 
+async def run_schedule():
+    while True:
+        schedule.run_pending()
+        await asyncio.sleep(1)
+
 def schedule_restart(restart_command):
-    schedule.every().day.at("06:30").do(restart_server, restart_command)
+    schedule.every().day.at("07:14").do(restart_server, restart_command)
 
 if __name__ == "__main__":
     websocket_uri = "ws://192.168.56.1:8000"
-    check_interval = 3
+    check_interval = 1
     restart_command = r'python "C:\Users\yuxia\SWBS\server\py-server demo\V2.5\Websocket_V2.5.py"'
 
     schedule_restart(restart_command)
 
-    asyncio.run(monitor_server(websocket_uri, check_interval, restart_command))
-    
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    loop = asyncio.get_event_loop()
+    tasks = [
+        monitor_server(websocket_uri, check_interval, restart_command),
+        run_schedule()
+    ]
+    loop.run_until_complete(asyncio.gather(*tasks))
