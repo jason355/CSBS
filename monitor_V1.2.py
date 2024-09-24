@@ -39,28 +39,25 @@ async def check_server(uri):
 def cleanup_old_process():
     try:
         print("Cleaning up old processes...")
-        process_name = r"C:\Users\yuxia\SWBS\server\py-server demo\V2.5\Websocket_V2.5.py"
-        tasklist_output = subprocess.check_output(f'tasklist /FI "IMAGENAME eq python.exe"', shell=True).decode()
+        process_name = "C:/code/server/Websocket_V2.5.py"
+
+        # 使用 wmic 查找與指定腳本相關的進程
+        process_output = subprocess.check_output('wmic process where "name=\'python.exe\'" get CommandLine,ProcessId', shell=True)
+        process_output = process_output.decode('cp850', errors='ignore')  # 解碼輸出
         
-        if process_name in tasklist_output:
-            print(f"Found running process: {process_name}, attempting to terminate...")
-            subprocess.call(["taskkill", "/F", "/IM", "python.exe"])
-            print("Process terminated successfully.")
-        else:
-            print(f"No running process found for: {process_name}.")
+        # 尋找執行指定腳本的進程
+        for line in process_output.splitlines():
+            if process_name in line:
+                # 從輸出中提取進程ID (PID)
+                pid = line.strip().split()[-1]
+                print(f"Found running process for {process_name}, attempting to terminate PID: {pid}...")
+                subprocess.call(["taskkill", "/F", "/PID", pid])  # 使用 PID 終止進程
+                print("Process terminated successfully.")
+                return
+
+        print(f"No running process found for: {process_name}.")
     except Exception as e:
         print(f"Failed to clean up old processes: {e}")
-
-def restart_server(command):
-    try:
-        cleanup_old_process()
-        print("Restarting server...")
-        subprocess.Popen(f'start cmd /c {command}', shell=True)
-        print("Server restart command issued successfully\n", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        time.sleep(5)
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to restart server: {e}")
-
 async def monitor_server(uri, check_interval, restart_command):
     retry_count = 0
     max_retry_interval = 300
