@@ -1,7 +1,7 @@
 # Campus Slient Broadcasting System
 ---
 ## Overall
-本系主要目的為透過Linebot、server、Android app，三部分實現無聲廣播。(Android app 請見: (APP)[https://github.com/jason355/CSBS-Yunan])
+本系主要目的為透過Linebot、server、Android app，三部分實現無聲廣播。(Android app 請見: [App](https://github.com/jason355/CSBS-Yunan))
 以下是本系統架構圖。
 ![image](https://github.com/user-attachments/assets/7fe78704-8096-4fec-bbbf-dc97974ea9ce)
 發送者透過 Line 應用程式發送廣播訊息，此訊息將會從 Line 伺服器傳入至本系統之 Line Bot, 而此資料將會被存入資料庫。
