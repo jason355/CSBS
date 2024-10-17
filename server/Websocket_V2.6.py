@@ -12,33 +12,29 @@ import weakref
 from contextlib import contextmanager
 import gc
 
-
-# Please set up internet information here
+# 請於此設定伺服器和 Line Bot 相關的連接信息
 ip = "192.168.56.1"
 port = 8000
 line_bot_server_url = "https://d8b6-140-119-99-80.ngrok-free.app/return"
-# Please set up internet information here
 
-# 修改: 使用 WeakKeyDictionary 來存儲客戶端數據
+# 使用 WeakKeyDictionary 儲存客戶端與監控數據，減少記憶體使用
 client_data = weakref.WeakKeyDictionary()
 monitor_data = weakref.WeakKeyDictionary()
 
 try:
-    # access environment variable to get db password
+    # 從環境變數中獲取資料庫密碼
     database_pass = os.getenv("dbv1p")
-    # create database engine
+    # 建立資料庫引擎，連接到 MySQL 資料庫
     engine = create_engine(f"mysql+mysqlconnector://root:{database_pass}@localhost/dbV1", pool_size=50)
 
-    # create model base class
+    # 定義基礎類，並繼承自 SQLAlchemy 的 Base 類
     Base = declarative_base()
 
-    # create model class
+    # 定義 DataAccess 資料表模型，用於存取資料庫中的數據
     class DataAccess(Base):
         __tablename__ = 'data'
         id = Column(Integer, primary_key=True)
         name = Column(String(15))
-        #lineID = Column(String(45))
-        #hash = Column(String(40))
         content = Column(String(300))
         is_new = Column(Integer)
         time = Column(String(25))
@@ -48,21 +44,22 @@ try:
         finish_date = Column(String(10))
         sound = Column(Integer)
 
+    # 定義 ClassAccess 資料表模型，用於儲存班級資訊
     class ClassAccess(Base):
         __tablename__ = 'class_list'
         id = Column(Integer, primary_key=True)
         classCode = Column(String(3))
         className = Column(String(10))
 
-    # create session
+    # 建立資料庫會話
     Session = sessionmaker(bind=engine)
 
-    # create database table
+    # 建立資料表
     Base.metadata.create_all(engine)
 except SQLAlchemyError as e:
     print("Error setting up DAL :", e)
 
-
+# 檢查必要功能是否可用
 def check_funcs():
     try:
         check_one = send_message_to_user(None, None, None, 1)
@@ -77,8 +74,7 @@ def check_funcs():
         print("Error in check_funcs:", e)
         return False
 
-
-# 新增: 創建上下文管理器來處理數據庫會話
+# 創建上下文管理器以安全地處理資料庫會話
 @contextmanager
 def session_scope():
     session = Session()
@@ -91,7 +87,7 @@ def session_scope():
     finally:
         session.close()
 
-# 新增: 分頁查詢函數
+# 實現分頁查詢，用來批次處理大量資料
 def paginate(query, page_size=100):
     offset = 0
     while True:
@@ -101,11 +97,12 @@ def paginate(query, page_size=100):
         yield from batch
         offset += page_size
 
-# 修改: handle_message 函數
+# 處理來自 WebSocket 的訊息，並根據不同的訊息類型作出相應的處理
 async def handle_message(ws):
     try:
         while True:
             try:
+                # 設定 5 秒超時來接收訊息
                 received_message = json.loads(await asyncio.wait_for(ws.recv(), timeout=5.0))
                 if not received_message.get("header") == "M1":
                     print("Received : ", received_message)
@@ -120,7 +117,7 @@ async def handle_message(ws):
                 print(f"Other error: {e}")
                 break
 
-            # 處理不同類型的消息
+            # 根據訊息標頭進行不同處理
             if received_message.get("header") == "A0":
                 await handle_a0_message(ws, received_message)
             elif received_message.get("header") == "A2":
@@ -130,13 +127,13 @@ async def handle_message(ws):
     except Exception as e:
         print("Error in handle_message:", e)
     finally:
-        # 確保在連接關閉時清理資源
+        # 當 WebSocket 關閉時清理對應的客戶端數據
         if ws in client_data:
             del client_data[ws]
         if ws in monitor_data:
             del monitor_data[ws]
 
-# 新增: 處理 A0 消息的函數
+# 處理 A0 類型的訊息，將班級數據新增到資料庫中
 async def handle_a0_message(ws, received_message):
     try:
         for key in client_data:
@@ -146,6 +143,7 @@ async def handle_a0_message(ws, received_message):
                 await ws.close()
                 return
 
+        # 將收到的班級信息存入 client_data
         client_data[ws] = {
             "classCode": received_message.get("classCode"),
             "className": received_message.get("className"),
@@ -163,7 +161,7 @@ async def handle_a0_message(ws, received_message):
     except Exception as e:
         print("Error in handle_a0_message:", e)
 
-# 新增: 處理 M1 消息的函數
+# 處理 M1 類型的訊息，並檢查伺服器的狀態
 async def handle_m1_message(ws, received_message):
     monitor_data[ws] = received_message.get("ping")
     if check_funcs():
@@ -172,7 +170,7 @@ async def handle_m1_message(ws, received_message):
         message = {"header": "S2", "ping": "failed"}
     await send(ws, message, 0, "S2", 0)
 
-# 修改: New_data_added 函數
+# 監控資料庫中新數據的加入，並發送訊息給各班級
 async def New_data_added(check):
     if check == 1: return True
     loop_count = 0
@@ -204,73 +202,63 @@ async def New_data_added(check):
         except Exception as e:
             print("Error in New_data_added:", e)
         
-        # 定期進行垃圾回收
+        # 定期進行垃圾回收，避免記憶體洩漏
         loop_count += 1
         if loop_count % 100 == 0:
             gc.collect()
         
         await asyncio.sleep(1)
 
-# 新增: 格式化目標班級的函數
+# 格式化目標班級
 def format_destination(des_grade, des_class):
     if des_grade[1] in ["7", "8", "9"]:
         return des_grade[1] + des_grade[0] + des_class
     return des_grade + des_class
 
+# 發送訊息至目標班級
 async def send_message_to_user(message, id, dest, check):
     try:
         if check == 1 : return True
-        # Traverse every data
+        # 遍歷客戶端數據
         for ws, cls_infor in client_data.items():
-            # if it's the correct class, start sending process
+            # 檢查是否為對應的班級
             if int(cls_infor["classCode"]) == int(dest):
-                # produce for-cli-data
-                data={
-                    "header": "S1",
-                    "message": message 
-                }
+                # 準備發送的數據
+                data={ "header": "S1", "message": message }
                 return await send(ws, data, id, "S1", 0)
     except Exception as e:
         print("Error in send_message_to_user:", e)
 
-
+# 發送訊息的輔助函數
 async def send(ws, message, id, header, check):
     try:
         if check == 1 : return True
-        # convert message to JSON string
         message = json.dumps(message, ensure_ascii=False)
         try:
-            # send message
             await ws.send(message)
         except Error as e:
             print("Error sending message to user : ", e)
+        
         break_at = 0
-        # waiting 60s for the client's return value to finish the sending process
         if header == "S1":
             while break_at < 600:
-                if ws in client_data:
-                    # check if the returned_id exists and is not None
-                    if client_data[ws]["returned_id"] is not None and int(client_data[ws]["returned_id"]) == int(id):
-                        print("data sending success, id : ", id)
-                        # if client did return the value, return "u"
-                        return "s"
+                if ws in client_data and client_data[ws]["returned_id"] == int(id):
+                    print("data sending success, id : ", id)
+                    return "s"
                 await asyncio.sleep(0.1)
                 break_at += 1
-            # if client didn't return the value, return "u"
             return "u"
         else:
             return "s"
     except Exception as e:
         print("Error in send:", e)
 
-
+# 當未成功發送，發送錯誤訊息到 Line Bot 伺服器
 def send_message_to_line_bot(time, name, cls, content, check):
     try:
         if check == 1 : return True
-        # setting the information of http sending
         data = {"time": time, "name": name, "cls": cls, "content": content}
         try:
-            # post the data on the url
             response = requests.post(line_bot_server_url, json=data)
             response.raise_for_status()
             print("Message sent successfully to Line Bot Server")
@@ -279,21 +267,18 @@ def send_message_to_line_bot(time, name, cls, content, check):
     except Exception as e:
         print("Error in send_message_to_line_bot:", e)
 
-
-
+# 啟動 WebSocket 伺服器
 async def start_server():
     try:
-        # start the server
         server = await websockets.serve(handle_message, ip, port)
         print('WebSocket server started')
-        # create duplicated detection
+        # 啟動監聽新資料的任務
         asyncio.create_task(New_data_added(0))
         await server.wait_closed()
     except Exception as e:
         print("Error in start_server:", e)
 
-
+# 主程式入口
 if __name__ == '__main__':
-    # start server
     loop = asyncio.get_event_loop()
     loop.run_until_complete(start_server())
