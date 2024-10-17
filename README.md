@@ -20,3 +20,4 @@ Server 將會偵測新訊息並且傳送至指定Android App。
 ![image](https://github.com/user-attachments/assets/8ffae464-efbc-4df3-a43f-ff7832545b2d)
 
 ## Server
+![server relations chart](https://github.com/user-attachments/assets/cbee0379-926f-4e67-bef1-5f24ed1ecec1)
