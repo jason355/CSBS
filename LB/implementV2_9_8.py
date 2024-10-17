@@ -1,9 +1,9 @@
 
-# version 2.9.7
+# version 2.9.8
 import re
 from linebot.models import  TextSendMessage, PostbackTemplateAction, TemplateSendMessage, ButtonsTemplate, PostbackAction, DatetimePickerTemplateAction,MessageAction, URIAction
 from datetime import date, timedelta
-import imple_toolV2_9_7 as t
+import imple_toolV2_9_8 as t
 import copy
 from datetime import datetime
 import sys
@@ -483,6 +483,17 @@ class Bot():
                         hash_text = data['name'] + data['lineID'] + data['office'] + data['time'] + data['content']
                         data['hash'] = t.sha1_hash(hash_text)
 
+                        if "611" not in self.users[user_id].data['classLs'] or "6" not in self.users[user_id].data["classLs"]:
+                            print("True")
+                            data['des_class'] = 1
+                            data['des_grade'] = "61"
+                            try:
+                                self.db.insertData(data)
+                            except Exception as e:
+                                error = f"{errorText}-confirm_yes-self.db.insertData()-adding 611 to database\n{e}"
+                                print(error)
+                                self.addError(error)    
+                                
                         if len(self.users[user_id].data['classLs']) == 0:
                             data['des_class'] = self.users[user_id].data['des_class']
                             data['des_grade'] = self.users[user_id].data['des_grade'] 

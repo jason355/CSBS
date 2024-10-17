@@ -1,6 +1,6 @@
 import os, sys
-from implementV2_9_7 import Teacher, Bot
-import databaseV2_9_7 as db
+from implementV2_9_8 import Teacher, Bot
+import databaseV2_9_8 as db
 from urllib.parse import parse_qsl
 from linebot.models import  FollowEvent, MessageEvent, TextMessage, TextSendMessage, UnfollowEvent, PostbackEvent, FileMessage
 from linebot.exceptions import InvalidSignatureError
@@ -15,8 +15,8 @@ from sqlalchemy import exc
 app = Flask(__name__) # 建立 Flask 物件
 
 
-channel_access_token = os.getenv("SSBS_test2A") # 取得Line bot channel access token 環境變數
-channel_secret = os.getenv("SSBS_test2C") # 取得 Line bot channel secret 環境變數
+channel_access_token = os.getenv("SSBS_A") # 取得Line bot channel access token 環境變數
+channel_secret = os.getenv("SSBS_C") # 取得 Line bot channel secret 環境變數
 
 
 line_bot_api = LineBotApi(channel_access_token) #  建立 Line bot API 實例
@@ -27,7 +27,7 @@ users = {} # 初始化 users
 Manager = Bot(line_bot_api, db, users) # Bot 實例 在 implement 中定義
 
 
-errorText = "*An Error in appV2.9.6" # 錯誤訊息基本文字
+errorText = "*An Error in appV2.9.8" # 錯誤訊息基本文字
 # error_messages = [] # 錯誤訊息 List
 global errorIndex # 錯誤訊息索引值紀錄
 errorIndex = 1 # 初始化索引值

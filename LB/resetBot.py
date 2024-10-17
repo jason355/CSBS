@@ -1,5 +1,5 @@
 
-# version 2.9.6
+# version 2.9.8
 import subprocess
 import time
 
@@ -12,7 +12,7 @@ def start():
     child_process.wait()
 
 
-file_name = "./LB/appV2.9.7.py"   # input("輸入啟動檔案名稱> ")
+file_name = "./LB/appV2.9.8.py"   # input("輸入啟動檔案名稱> ")
 
 if True:
 

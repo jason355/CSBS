@@ -1,5 +1,5 @@
 import re
-import databaseV2_9_7 as db
+import databaseV2_9_8 as db
 import regex, hashlib
 from datetime import datetime, time
 
@@ -7,7 +7,7 @@ class_list = ['701', '702', '703', '704', '705', '801', '802', '803', '804', '80
 group_index = [-1, 4, 9, 14, 20, 26, 32]
 grade_list = ['1', '2', '3', '4', '5','7', '8', '9']
 
-errorText = "*An Error in imple_toolV2_9_6"
+errorText = "*An Error in imple_toolV2_9_8"
 help_text = '''歡迎加入政大附中無聲廣播系統
 設定好個人資訊後，向管理員提出身分認證。
 
