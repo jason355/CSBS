@@ -1,9 +1,9 @@
 
-# version 2.9.8
+# version 2.9.9
 import re
 from linebot.models import  TextSendMessage, PostbackTemplateAction, TemplateSendMessage, ButtonsTemplate, PostbackAction, DatetimePickerTemplateAction,MessageAction, URIAction
 from datetime import date, timedelta
-import imple_toolV2_9_8 as t
+import imple_toolV2_9_9 as t
 import copy
 from datetime import datetime
 import sys
@@ -34,7 +34,7 @@ data = response.json()
 
 
 # Extract the public URL
-webhook_url = data['tunnels'][0]['public_url']
+webhook_url = data['tunnels'][0]['public_url'] + "/callback"
 print(f"ngrok URL: {webhook_url}")
 
 
@@ -1266,13 +1266,15 @@ class Bot():
         result = re.findall(AdminConfirmPatter, text)
     
         note = False
+        reply_message = "已更新:"
         if result != None:
             for scope in result:
                 print(scope)
                 if "-" in scope:
                     if int(scope[0:1]) >= 1 and int(scope[2:3]) <= len(self.Confirm_List):
-                        for i in range(int(scope[0:1]), int(scope[2:3])+1, 1):
+                        for i in range(int(scope[0:1]), int(scope[2:])+1, 1):
                             try:
+                                reply_message += f"\n▶️ {self.db.getTeacher(self.Confirm_List[i-1], ['name'])[0]}✅"
                                 ack = self.db.modifyVerifyStat(self.Confirm_List[i-1])
 
                             except exc.OperationalError as oe:
@@ -1299,6 +1301,7 @@ class Bot():
                     # print(scope)
                     if int(scope) >= 1 and int(scope) <= len(self.Confirm_List):
                         try:
+                            reply_message += f"\n▶️ {self.db.getTeacher(self.Confirm_List[int(scope) - 1], ['name'])[0]}✅"
                             ack = self.db.modifyVerifyStat(self.Confirm_List[int(scope) - 1])
                         except exc.OperationalError as oe:
                             print(oe)
@@ -1325,6 +1328,8 @@ class Bot():
                 for user in self.Confirm_List:
                     if user != "":
                         try:
+                            reply_message += f"\n▶️ {self.db.getTeacher(user, ['name'])[0]}❌"
+
                             self.db.DelTeacherData(user)
                         except exc.OperationalError as oe:
                             print(oe)
@@ -1340,10 +1345,10 @@ class Bot():
                         else:
                             self.api.push_message(user, TextSendMessage(text="很抱歉，管理員已否決您的申請。"))
 
+
                 self.Confirm_List = []
-                reply_message = "更新成功"
-                self.api.reply_message(
-                event.reply_token, TextSendMessage(text=reply_message))
+                # print(reply_message)
+                self.api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
                 self.users[user_id].status = "Fs"
                 try:
                     name =  self.db.getTeacher(user_id).name

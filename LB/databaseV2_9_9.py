@@ -41,17 +41,31 @@ def getClassDic(startid = 1):
 
 
 # 取得教師資訊
-def getTeacher(lineId):
+def getTeacher(lineId, columns=[]):
     try:
         with Session() as session:
             teacher = session.query(tea_infor).filter(tea_infor.lineID == lineId).one_or_none()
             
             if teacher:
-                return teacher
+                if columns == []:
+                    return teacher
+                else:
+                    data = []
+                    for column in columns:
+                        data.append(getattr(teacher, column))
+                    return data
             return False
     except Exception as e:
         raise e
 
+# # 取得教師
+# def getTeacher(lineId):
+#     try:
+#         teacher = getTeacher(lineId)
+
+#         return teacher.name
+#     except Exception as e:
+#         raise e
 # 確認是否有此教師
 def findTeacher(lineId):
     try:
@@ -316,6 +330,10 @@ try:
     Base.metadata.create_all(engine)
     Session = sessionmaker(bind=engine)
     # print(getClassNameList(34))
+
+
+
+
 
 
 except SQLAlchemyError as e:

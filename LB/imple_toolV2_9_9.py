@@ -1,5 +1,5 @@
 import re
-import databaseV2_9_8 as db
+import databaseV2_9_9 as db
 import regex, hashlib
 from datetime import datetime, time
 
@@ -271,3 +271,12 @@ def isBreak(BreakList):
     else:
         return 3
 
+# def addUsers(n):
+#     for i in range(10,10+n):
+#         user_id = sha1_hash(str(i))
+#         db.insertTeaInfor(lineId=user_id, map={"name":i, "office":"A", "verifyStat": 0})
+#         # # db.DelTeacherData(lineId=i)
+#         print(user_id)
+
+# addUsers(n=10)
+    
