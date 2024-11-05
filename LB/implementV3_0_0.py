@@ -1,9 +1,9 @@
 
-# version 2.9.9
+# version 3.0.0
 import re
 from linebot.models import  TextSendMessage, PostbackTemplateAction, TemplateSendMessage, ButtonsTemplate, PostbackAction, DatetimePickerTemplateAction,MessageAction, URIAction
 from datetime import date, timedelta
-import imple_toolV2_9_9 as t
+import imple_toolV3_0_0 as t
 import copy
 from datetime import datetime
 import sys
@@ -18,7 +18,7 @@ group_index = [-1, 4, 9, 14, 20, 26, 32]
 grade_list = ['1', '2', '3', '4', '5','7', '8', '9']
 dataTemplate = {'content':"", 'classLs': [], 'classStr': "", 'des_class': "", 'des_grade': "", 'finish_date':"", 'sound':""}
 BreakList = {}
-errorText = "*An Error in implementV2_9_6"
+errorText = "*An Error in implementV3.0.0"
 contactInfo = "{contactInfo}"
 error_messages  = []
 global errorIndex
@@ -907,6 +907,10 @@ class Bot():
                             canSend = False
                             break
                         print(f"str {self.users[user_id].data['classStr']}")
+                else:
+                    reply_message = "請輸入有效代碼"
+                    self.reply_cancel(event, reply_message)
+                    canSend = False 
             if canSend:
                 print(f"Bs2.2:{self.users[user_id].data['classStr']}")
                 self.users[user_id].data['classStr'] = t.format_class(self.users[user_id].data['classStr'])
