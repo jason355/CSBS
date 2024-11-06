@@ -1,6 +1,6 @@
 import os, sys
-from implementV3_0_0 import Teacher, Bot
-import databaseV3_0_0 as db
+from implementV3_0_1 import Teacher, Bot
+import databaseV3_0_1 as db
 from urllib.parse import parse_qsl
 from linebot.models import  FollowEvent, MessageEvent, TextMessage, TextSendMessage, UnfollowEvent, PostbackEvent, FileMessage
 from linebot.exceptions import InvalidSignatureError
@@ -8,34 +8,52 @@ from linebot import LineBotApi, WebhookHandler
 from flask import Flask, request, abort, jsonify, render_template
 from werkzeug.serving import make_server
 from sqlalchemy import exc
-
-
-
+import json
 
 app = Flask(__name__) # 建立 Flask 物件
 
 
-channel_access_token = os.getenv("SSBS_test2A") # 取得Line bot channel access token 環境變數
-channel_secret = os.getenv("SSBS_test2C") # 取得 Line bot channel secret 環境變數
+channel_access_token = os.getenv("CSBS_A") # 取得Line bot channel access token 環境變數
+channel_secret = os.getenv("CSBS_C") # 取得 Line bot channel secret 環境變數
 
 
 line_bot_api = LineBotApi(channel_access_token) #  建立 Line bot API 實例
 handler = WebhookHandler(channel_secret) # 建立 webhook 實例
 
 
-users = {} # 初始化 users
+users = {} # 建立 users 字典
 Manager = Bot(line_bot_api, db, users) # Bot 實例 在 implement 中定義
 
-
-errorText = "*An Error in appV3.0.0" # 錯誤訊息基本文字
-# error_messages = [] # 錯誤訊息 List
+errorText = "*An Error in appV3.0.1" # 錯誤訊息基本文字
 global errorIndex # 錯誤訊息索引值紀錄
 errorIndex = 1 # 初始化索引值
 
+# 取得根目錄
+script_dir = os.path.dirname(os.path.abspath(__file__)) 
 
+with open("config.json", "r", encoding="utf-8") as c:
+    config = json.load(c)
 
-Manager.send_link_to_admin()
+if not config["Dynamic"]["initial_start"]:
+    for teacher in db.GetAllTeacherID():
+        line_bot_api.push_message(teacher, TextSendMessage(text="系統重啟完成✅")) 
+else:
+    config["Dynamic"]["initial_start"] = False
+    with open("config.json", "w", encoding="utf-8") as f:
+        f.write(json.dumps(config, indent=4))
 
+Manager.webhook_url = Manager.query_ngork_url(config["Basic"]["query_url"])
+
+if config["Basic"]["ngrok_url"] == "":
+    config["Basic"]["ngrok_url"] = Manager.webhook_url
+    Manager.send_link_to_admin()
+    with open("config.json", "w") as f:
+        f.write(json.dumps(config, indent=4))
+elif config["Basic"]["ngrok_url"] != Manager.webhook_url:
+    config["Basic"]["ngrok_url"] = Manager.webhook_url
+    Manager.send_link_to_admin()
+    with open("config.json", "w") as f:
+        f.write(json.dumps(config, indent=4))
 
 # 處理callback事項
 @app.route("/callback", methods=['POST']) # 設置一個路由，處理來自指定URL的POST請求
@@ -75,12 +93,13 @@ def test():
     
 
 
-
+# 錯誤訊息網頁
 @app.route('/errors', methods=['GET'])
 def show_errors():
     error_messages = Manager.getErrorList()     # 取得在implement 中的error List
     return render_template('errors.html', errors=error_messages) # 渲染畫面顯示error list
 
+# 班級列表
 @app.route('/classList', methods=['GET'])
 def showClassList():
     try:
@@ -91,6 +110,22 @@ def showClassList():
         error = f"{errorText}-showClassList\n{e}"
         print(error)
         Manager.addError(error)
+
+# 及時廣播訊息狀態
+@app.route('/realtimedata/<user_id>', methods=['GET'])
+def realtimedata(user_id):
+    try:
+        data = db.get_sended_data(user_id)   
+        if user_id not in Manager.users:
+            username = "使用者"
+        else:
+            username = Manager.users[user_id].name
+        return render_template("index.html", username = username, data = data)
+    except Exception as e:
+        error = f"{errorText}-realtimedata\n{e}"
+        print(error)
+        Manager.addError(error)
+
 
 # 教師初次登入
 @handler.add(FollowEvent)

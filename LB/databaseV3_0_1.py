@@ -1,4 +1,6 @@
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, Text, DateTime, update, SmallInteger
+# version 3.0.1
+
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, Text, DateTime, update, SmallInteger, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
@@ -7,7 +9,7 @@ import os
 
 
 # 取得資料庫密碼
-database_pass = os.getenv("dbv1p")
+database_pass = os.getenv(key="dbv1p")
 
 # 取得班級代碼列表
 def getClassCodeList(startid = 1):
@@ -290,6 +292,20 @@ def insertClass():
             
     except Exception as e:
         raise e
+
+
+# 教師取得廣播即時資訊
+def get_sended_data(lineId):
+    try:
+        with Session() as session:
+            data1 = session.query(Data).filter(Data.lineID == lineId, Data.is_new==1).order_by(desc(Data.time)).limit(400)
+            data0 = session.query(Data).filter(Data.lineID == lineId, Data.is_new==0).order_by(desc(Data.time)).limit(100)
+            data = data1.union(data0)
+        return data
+            
+    except Exception as e:
+        raise e
+
 
 try:
 

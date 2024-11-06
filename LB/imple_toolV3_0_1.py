@@ -1,5 +1,5 @@
 import re
-import databaseV3_0_0 as db
+import databaseV3_0_1 as db
 import regex, hashlib
 from datetime import datetime, time
 
@@ -7,7 +7,10 @@ class_list = ['701', '702', '703', '704', '705', '801', '802', '803', '804', '80
 group_index = [-1, 4, 9, 14, 20, 26, 32]
 grade_list = ['1', '2', '3', '4', '5','7', '8', '9']
 
-errorText = "*An Error in imple_toolV3_0_0"
+errorText = "*An Error in imple_toolV3_0_1"
+
+
+
 help_text = '''歡迎加入政大附中無聲廣播系統
 設定好個人資訊後，向管理員提出身分認證。
 
@@ -142,98 +145,6 @@ def format_class(input):
     for item in result:
         res += " "+item
     return res
-
-
-# 歷史訊息排序
-def sort_history_message(history_data):
-    length = len(history_data)
-    i = 0
-    for m in range(length):
-        cList = []
-    
-        if i >= len(history_data):
-            break
-        history_data[i].des_grade += f"{history_data[i].des_class}"
-        cList.append(history_data[i].des_grade)
-        print(f"cList:{cList}")
-
-        j = i+1 # 第i筆的下一個
-        for k in range(i+1,length, 1):
-            if j >= len(history_data):
-                break
-            if history_data[i].hash == history_data[j].hash:
-                if history_data[j].des_grade + history_data[j].des_class not in cList:
-                    cList.append(history_data[j].des_grade + history_data[j].des_class)
-                    history_data[i].des_grade += f" {history_data[j].des_grade + history_data[j].des_class}"
-                del history_data[j]
-            else:
-                j += 1
-        try:
-            history_data[i].des_grade = check_class(history_data[i].des_grade)
-            history_data[i].des_grade = format_class(history_data[i].des_grade)
-        except Exception as e:
-            raise e
-        else:
-            i += 1
-    return history_data
-
-
-
-# 交換班級格式
-def swapClassFromat(des_grade, des_class):
-    result = des_grade[1:] + des_grade[0:1] + des_class
-    return result 
-
-
-# python 可以使用
-# list[0:n] => 取得第0個元素到第n-1個的元素 
-# ex: list = [1, 2, 3, 4] list[0:3] => [1, 2, 3]
-# 字串也可使用此方法取得第n個字元到第m-1個
-# ex : string = "array" string[0:3] => "arr"
-
-
-# 縮短班級
-def check_class(input):
-    result = input
-    for i in range(6):
-        temp = class_list[group_index[i]+1:group_index[i+1]+1] # i = 0: index = 0-4 class = 701-705 以此類推
-        words = result.split()
-        if all(code in words for code in temp):
-            match i:
-                case 0:
-                    result = "國7 " + ' '.join(word for word in words if word not in temp)
-                case 1:
-                    result = "國8 " + ' '.join(word for word in words if word not in temp)
-                case 2:
-                    result = "國9 " + ' '.join(word for word in words if word not in temp)
-                case 3:
-                    result = "高1 " + ' '.join(word for word in words if word not in temp)
-                case 4:
-                    result = "高2 " + ' '.join(word for word in words if word not in temp)
-                case 5:
-                    result = "高3 " + ' '.join(word for word in words if word not in temp)
-            # print(result)
-        else:
-            pass
-    
-    words = result.split()
-    if all(code in result for code in ["國7", "國8", "國9"]):
-        result = "國中部 " + ' '.join(code for code in words if code not in ["國7", "國8", "國9"])
-        words = result.split()
-    if all(code in result for code in ["高1", "高2", "高3"]):
-        result = "高中部 " + ' '.join(code for code in words if code not in ["高1", "高2", "高3"])
-        words = result.split()
-    print(f"words: {words}")
-    if all(code in result for code in ["國中部", "高中部"]):
-        result = "全年級 " 
-        for code in words:
-            if code not in ["國中部", "高中部"]:
-                result += code + " "
-                print(result)
-    # elif "國中部" in result and "高中部" in result:
-    #     result = "全校 " + ' '.join(code for code in words if code not in ["國中部", "高中部"])    # print(f"result: {result}")
-
-    return result
 
 
 # 計算字數

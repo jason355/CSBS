@@ -1,15 +1,13 @@
 
-# version 3.0.0
-import re
-from linebot.models import  TextSendMessage, PostbackTemplateAction, TemplateSendMessage, ButtonsTemplate, PostbackAction, DatetimePickerTemplateAction,MessageAction, URIAction
+# version 3.0.1
+import re, json, copy, sys, requests, subprocess
+from linebot.models import  TextSendMessage, PostbackTemplateAction, TemplateSendMessage, ButtonsTemplate, PostbackAction, DatetimePickerTemplateAction,MessageAction, URIAction, QuickReply, QuickReplyButton
 from datetime import date, timedelta
-import imple_toolV3_0_0 as t
-import copy
+import imple_toolV3_0_1 as t
 from datetime import datetime
-import sys
 from sqlalchemy import exc
-import requests
- 
+
+
 
 pattern = r'(\d+)[, ]*'
 AdminConfirmPatter = r'(\d+-\d+|\d+)'
@@ -18,25 +16,13 @@ group_index = [-1, 4, 9, 14, 20, 26, 32]
 grade_list = ['1', '2', '3', '4', '5','7', '8', '9']
 dataTemplate = {'content':"", 'classLs': [], 'classStr': "", 'des_class': "", 'des_grade': "", 'finish_date':"", 'sound':""}
 BreakList = {}
-errorText = "*An Error in implementV3.0.0"
+errorText = "*An Error in implementV3_0_1"
 contactInfo = "{contactInfo}"
 error_messages  = []
 global errorIndex
 errorIndex = 1
 global ExamStatus
 ExamStatus = False
-
-# webhook_url = input("請輸入 ngrok 網址> ")
-# Query ngrok's local API to get the public URL
-url = "http://127.0.0.1:4040/api/tunnels"
-response = requests.get(url)
-data = response.json()
-
-
-# Extract the public URL
-webhook_url = data['tunnels'][0]['public_url'] + "/callback"
-print(f"ngrok URL: {webhook_url}")
-
 
 
 
@@ -55,19 +41,38 @@ class Teacher():
 
 class Bot():
 
-    def __init__(self, api, database, users, Confirm_List = []):
+    def __init__(self, api, database, users, Confirm_List = [], webhook_url = ""):
         self.api = api
         self.db = database
         self.users = users 
         self.Confirm_List = Confirm_List
+        self.webhook_url = webhook_url
 
     
-    
+    # 抓取ngrok url
+    def query_ngork_url(self, url):
+        try:
+            response = requests.get(url) # 透過本地API抓取對外URL
+            data = response.json()
+
+            # Extract the public URL
+            webhook_url = data['tunnels'][0]['public_url'] + "/callback"
+            print(f"ngrok URL: {webhook_url}")
+            return webhook_url
+        except requests.exceptions.ConnectionError as REC:
+            ngrok_command = "ngrok http 5000"
+            subprocess.Popen(ngrok_command, creationflags=subprocess.CREATE_NEW_CONSOLE)
+            with open("config.json", "r", encoding="utf-8") as c:
+                config = json.load(c)
+            with open("config.json", "w", encoding="utf-8") as f:
+                config["Dynamic"]["initial_start"] = True
+                f.write(json.dumps(config, indent=4))
+            sys.exit()
     # 傳送連結至管理員
     def send_link_to_admin(self):
         adminList = self.db.findAdmin()
         for admin in adminList:
-            self.api.push_message(admin, TextSendMessage(text= f"Linebot 已啟動，請至 https://developers.line.biz/console/channel/2000168053/messaging-api 更新\nLink: {webhook_url}"))
+            self.api.push_message(admin, TextSendMessage(text= f"Linebot 已啟動，請至 https://developers.line.biz/console/channel/2000168053/messaging-api 更新\nLink: {self.webhook_url}"))
 
 
 
@@ -382,7 +387,7 @@ class Bot():
                         ),
                         URIAction(
                             label="班級列表",
-                            uri=webhook_url+"/classList"
+                            uri=self.webhook_url[:-8]+"classList"
                         ),                        
                         PostbackTemplateAction(
                             label='取消',
@@ -435,7 +440,7 @@ class Bot():
                         ),
                         URIAction(
                             label="班級列表",
-                            uri=webhook_url+"/classList"
+                            uri=self.webhook_url[:-8]+"/classList"
                         ),
                         PostbackTemplateAction(
                             label='取消',
@@ -646,13 +651,25 @@ class Bot():
                             T = t.isBreak(BreakList)
                             if T == 1:
                                 reply_message = "✅已更新置資料庫，將在現在廣播"
-                                self.api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
                             elif T == 2:
                                 reply_message = "✅已更新置資料庫，將在明天廣播"
-                                self.api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
                             elif T == 3:
                                 reply_message = "✅已更新置資料庫，將在下一節下課廣播"
-                                self.api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
+                            message = TemplateSendMessage(
+                                            alt_text='Button Template',
+                                            template=ButtonsTemplate(
+                                                title=reply_message,
+                                                text="點選下方按鈕可查看廣播使否發出",
+                                                actions=[
+                                                    URIAction(
+                                                        label="及時廣播狀態",
+                                                        uri=self.webhook_url[:-8]+"realtimedata/"+user_id
+                                                    )
+                                                ]
+                                            )
+                                        )
+                            self.api.reply_message(event.reply_token, message)
+
                             self.users[user_id].data = copy.deepcopy(dataTemplate)
                     else:
                         reply_message = f"⚠️資料庫中未找到您的資料，請您嘗試封鎖此 Line Bot再解封鎖，以重新註冊，或是聯絡 #9611資訊組 謝謝"
@@ -911,6 +928,7 @@ class Bot():
                     reply_message = "請輸入有效代碼"
                     self.reply_cancel(event, reply_message)
                     canSend = False 
+
             if canSend:
                 print(f"Bs2.2:{self.users[user_id].data['classStr']}")
                 self.users[user_id].data['classStr'] = t.format_class(self.users[user_id].data['classStr'])
@@ -1675,35 +1693,14 @@ class Bot():
     
     # 歷史訊息按紐處理
     def postback_Hs(self, event, user_id):
-        history_data = []
-        try:
-            history_data = self.db.getHistoryData(user_id)
-        except exc.OperationalError as oe:
-            print(oe)
-            self.api.reply_message(event.reply_token, TextSendMessage(text="⚠️資料庫連線錯誤，請再試一次"))
-        except Exception as e:
-            print(f"{errorText}-postback_Hs\n {e}")
-            self.addError(e)
-            reply_message = "伺服器錯誤，請再試一次或是聯絡 #9611資訊組"
-            self.api.push_message(user_id, TextSendMessage(text=reply_message))
-        else:
-            if len(history_data) == 0:
-                reply_message = "無歷史訊息"
-                self.api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
-            else:
-                reply_message = "以下是您最近發送的歷史訊息\n"
-                try:
-                    history_data = t.sort_history_message(history_data)
-                except exc.OperationalError as oe:
-                    print(oe)
-                    self.api.reply_message(event.reply_token, TextSendMessage(text="⚠️資料庫連線問題，請再試一次"))
-                except Exception as e:
-                    error = f"{errorText}-postback_Hs()-.sort_histroy_message()\n{e}"
-                    print(error)
-                    self.api.push_message(user_id, TextSendMessage(text=f"⚠️資料庫處理發生問題，請再試一次或是洽 {contactInfo}"))
-                else:
-                    for i in range(1,len(history_data)+1, 1):
-                        reply_message += f"▶️{i})  {history_data[i-1].time} To: {history_data[i-1].des_grade} \n\t {history_data[i-1].content} \n"
-                    self.api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
-
+        quick_reply = QuickReply(items=[
+            QuickReplyButton(action=URIAction(label="查看歷史訊息", uri=f"{self.webhook_url[:-8]}/realtimedata/{user_id}"))
+        ])
+        
+        # 回應訊息，並附上 Quick Reply 按鈕
+        reply_message = TextSendMessage(
+            text="點擊按鈕查看歷史訊息",
+            quick_reply=quick_reply
+        )
+        self.api.reply_message(event.reply_token, reply_message)
 
