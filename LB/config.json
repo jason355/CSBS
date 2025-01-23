@@ -5,7 +5,7 @@
         "query_url": "http://127.0.0.1:4040/api/tunnels"
     },
     "Dynamic": {
-        "initial_start": false
+        "initial_start": true
     },
     "personal": {
         "class_list": [
