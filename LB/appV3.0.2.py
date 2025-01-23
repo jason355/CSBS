@@ -1,14 +1,13 @@
 import os, sys
-from implementV3_0_1 import Teacher, Bot
-import databaseV3_0_1 as db
+from implementV3_0_2 import Teacher, Bot
+import databaseV3_0_2
 from urllib.parse import parse_qsl
-from linebot.models import  FollowEvent, MessageEvent, TextMessage, TextSendMessage, UnfollowEvent, PostbackEvent, FileMessage
+from linebot.models import  FollowEvent, MessageEvent, TextMessage, TextSendMessage, UnfollowEvent, PostbackEvent
 from linebot.exceptions import InvalidSignatureError
 from linebot import LineBotApi, WebhookHandler
 from flask import Flask, request, abort, jsonify, render_template
 from werkzeug.serving import make_server
 from sqlalchemy import exc
-import json
 
 app = Flask(__name__) # 建立 Flask 物件
 
@@ -22,38 +21,20 @@ handler = WebhookHandler(channel_secret) # 建立 webhook 實例
 
 
 users = {} # 建立 users 字典
-Manager = Bot(line_bot_api, db, users) # Bot 實例 在 implement 中定義
 
-errorText = "*An Error in appV3.0.1" # 錯誤訊息基本文字
+
+errorText = "*An Error in appV3.0.2" # 錯誤訊息基本文字
 global errorIndex # 錯誤訊息索引值紀錄
 errorIndex = 1 # 初始化索引值
 
-# 取得根目錄
-script_dir = os.path.dirname(os.path.abspath(__file__)) 
 
-with open("config.json", "r", encoding="utf-8") as c:
-    config = json.load(c)
+db = databaseV3_0_2.mydatabase()
 
-if not config["Dynamic"]["initial_start"]:
-    for teacher in db.GetAllTeacherID():
-        line_bot_api.push_message(teacher, TextSendMessage(text="系統重啟完成✅")) 
-else:
-    config["Dynamic"]["initial_start"] = False
-    with open("config.json", "w", encoding="utf-8") as f:
-        f.write(json.dumps(config, indent=4))
 
-Manager.webhook_url = Manager.query_ngork_url(config["Basic"]["query_url"])
+Manager = Bot(line_bot_api, db, users) # Bot 實例 在 implement 中定義
+Manager.init()
 
-if config["Basic"]["ngrok_url"] == "":
-    config["Basic"]["ngrok_url"] = Manager.webhook_url
-    Manager.send_link_to_admin()
-    with open("config.json", "w") as f:
-        f.write(json.dumps(config, indent=4))
-elif config["Basic"]["ngrok_url"] != Manager.webhook_url:
-    config["Basic"]["ngrok_url"] = Manager.webhook_url
-    Manager.send_link_to_admin()
-    with open("config.json", "w") as f:
-        f.write(json.dumps(config, indent=4))
+
 
 # 處理callback事項
 @app.route("/callback", methods=['POST']) # 設置一個路由，處理來自指定URL的POST請求

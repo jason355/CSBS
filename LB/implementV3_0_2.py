@@ -1,22 +1,14 @@
-
-# version 3.0.1
-import re, json, copy, sys, requests, subprocess
+# version 3.0.2
+import re, json, sys, requests, subprocess
 from linebot.models import  TextSendMessage, PostbackTemplateAction, TemplateSendMessage, ButtonsTemplate, PostbackAction, DatetimePickerTemplateAction,MessageAction, URIAction, QuickReply, QuickReplyButton
 from datetime import date, timedelta
-import imple_toolV3_0_1 as t
+import imple_toolV3_0_2 as t
 from datetime import datetime
 from sqlalchemy import exc
 
 
 
-pattern = r'(\d+)[, ]*'
-AdminConfirmPatter = r'(\d+-\d+|\d+)'
-class_list = ['701', '702', '703', '704', '705', '801', '802', '803', '804', '805', '901', '902', '903', '904', '905','101', '102', '103', '104', '105', '106', '111', '112', '113', '114', '115', '116', '121', '122', '123', '124', '125', '126']
-group_index = [-1, 4, 9, 14, 20, 26, 32]
-grade_list = ['1', '2', '3', '4', '5','7', '8', '9']
-dataTemplate = {'content':"", 'classLs': [], 'classStr': "", 'des_class': "", 'des_grade': "", 'finish_date':"", 'sound':""}
-BreakList = {}
-errorText = "*An Error in implementV3_0_1"
+errorText = "*An Error in implementV3.0.2"
 contactInfo = "{contactInfo}"
 error_messages  = []
 global errorIndex
@@ -26,7 +18,6 @@ ExamStatus = False
 
 
 
-t.make_break(BreakList) # 建立下課列表
 
 class Teacher():
     
@@ -35,7 +26,7 @@ class Teacher():
         self.name = name
         self.office = office
         self.isAdm = isAdm
-        self.data = copy.deepcopy(dataTemplate) # 使用copy()创建新的字典
+        self.data = t.Template.get_dataTemplate() # 使用copy()创建新的字典
         self.status = status
         self.preStatus = preStatus
 
@@ -47,8 +38,35 @@ class Bot():
         self.users = users 
         self.Confirm_List = Confirm_List
         self.webhook_url = webhook_url
+        self.pattern = t.Template.get_pattern()
+        self.AdmConPattern = t.Template.get_AdmConPattern()
+        with open("config.json", "r", encoding="utf-8") as c:
+            self.config = json.load(c)
+        
 
-    
+        
+
+    def init(self):
+        if not self.config["Dynamic"]["initial_start"]:
+            for teacher in self.db.GetAllTeacherID():
+                self.api.push_message(teacher, TextSendMessage(text="系統重啟完成✅")) 
+        else:
+            self.config["Dynamic"]["initial_start"] = False
+            with open("config.json", "w", encoding="utf-8") as f:
+                f.write(json.dumps(self.config, indent=4))
+
+        self.webhook_url = self.query_ngork_url(self.config["Basic"]["query_url"])
+
+        if self.config["Basic"]["ngrok_url"] == "":
+            self.config["Basic"]["ngrok_url"] = self.webhook_url
+            self.send_link_to_admin()
+            with open("config.json", "w") as f:
+                f.write(json.dumps(self.config, indent=4))
+        elif self.config["Basic"]["ngrok_url"] != self.webhook_url:
+            self.config["Basic"]["ngrok_url"] = self.webhook_url
+            self.send_link_to_admin()
+            with open("config.json", "w") as f:
+                f.write(json.dumps(self.config, indent=4))
     # 抓取ngrok url
     def query_ngork_url(self, url):
         try:
@@ -63,10 +81,10 @@ class Bot():
             ngrok_command = "ngrok http 5000"
             subprocess.Popen(ngrok_command, creationflags=subprocess.CREATE_NEW_CONSOLE)
             with open("config.json", "r", encoding="utf-8") as c:
-                config = json.load(c)
+                self.config = json.load(c)
             with open("config.json", "w", encoding="utf-8") as f:
-                config["Dynamic"]["initial_start"] = True
-                f.write(json.dumps(config, indent=4))
+                self.config["Dynamic"]["initial_start"] = True
+                f.write(json.dumps(self.config, indent=4))
             sys.exit()
     # 傳送連結至管理員
     def send_link_to_admin(self):
@@ -117,7 +135,7 @@ class Bot():
             )
             self.api.reply_message(event.reply_token, message)
         except Exception as e:
-            print(f"{errorText}-SendButtn()\n{e}")
+            print(f"{errorText}-SendButton()\n{e}")
             self.addError(e)
             self.api.push_message(user_id, TextSendMessage(text="選擇傳送按鈕傳送錯誤，若樣板有傳出請忽略此訊息，若無請再試一次或是聯絡資訊組"))
 
@@ -307,7 +325,7 @@ class Bot():
 
     # 幫助
     def postback_Help(self, event):
-        reply_message = t.help_text
+        reply_message = self.config['personal']['help_text']
         self.api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
 
 
@@ -316,7 +334,7 @@ class Bot():
         if self.users[user_id].status != "Fs":
             self.users[user_id].status = "Fs"
             reply_message = "❎已取消"
-            self.users[user_id].data = copy.deepcopy(dataTemplate)
+            self.users[user_id].data = t.Template.get_dataTemplate()
 
             self.api.reply_message(
             event.reply_token, TextSendMessage(text=reply_message))
@@ -470,7 +488,7 @@ class Bot():
                     error = f"{errorText}-confirm_yes\n{e}"
                     print(error)
                     self.addError(error)
-                    self.users[user_id].data = copy.deepcopy(dataTemplate)
+                    self.users[user_id].data = t.Template.get_dataTemplate()
                     reply_message = "尋找資訊錯誤，請再試一次或洽 #9611資訊組"
                     self.api.push_message(user_id, TextSendMessage(text=reply_message)) 
                 else:
@@ -648,7 +666,7 @@ class Bot():
                                         ack = False
                                         break     
                         if ack == True:
-                            T = t.isBreak(BreakList)
+                            T = t.isBreak(self.config['personal']['break_dict'])
                             if T == 1:
                                 reply_message = "✅已更新置資料庫，將在現在廣播"
                             elif T == 2:
@@ -670,7 +688,7 @@ class Bot():
                                         )
                             self.api.reply_message(event.reply_token, message)
 
-                            self.users[user_id].data = copy.deepcopy(dataTemplate)
+                            self.users[user_id].data = t.Template.get_dataTemplate()
                     else:
                         reply_message = f"⚠️資料庫中未找到您的資料，請您嘗試封鎖此 Line Bot再解封鎖，以重新註冊，或是聯絡 #9611資訊組 謝謝"
                         self.api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
@@ -818,7 +836,7 @@ class Bot():
             print(e)
             self.api.push_message(user_id, TextSendMessage(text="確認按鈕傳送錯誤，請再試一次或聯絡管理員 錯誤代碼: E0001")) # 按鈕發生錯誤
             self.users[user_id].status = "Fs"
-            self.users[user_id].data = copy.deepcopy(dataTemplate) 
+            self.users[user_id].data = t.Template.get_dataTemplate() 
     # 單獨班級廣播
     def handle_Bs2_1(self, event, user_id, text):
         try:
@@ -849,7 +867,7 @@ class Bot():
     # 群發廣播
     def handle_Bs2_2(self, event, user_id, text):
         canSend = True
-        number_groups = re.findall(pattern, text) # 使用正則表達式解析(僅可判斷以空格或逗號隔開)
+        number_groups = re.findall(self.pattern, text) # 使用正則表達式解析(僅可判斷以空格或逗號隔開)
         print(f"number_groups {number_groups}")
         if number_groups != []:
             number_groups = t.arrangeGetClass(number_groups)
@@ -872,7 +890,7 @@ class Bot():
                         self.users[user_id].data['classLs'].append(group)
 
                     else:
-                        if  group in grade_list:
+                        if  group in self.config['personal']['grade_list']:
                             if int(group) < 4:
                                 if '4' not in number_groups:
                                     self.users[user_id].data['classLs'].append(group)
@@ -931,7 +949,7 @@ class Bot():
 
             if canSend:
                 print(f"Bs2.2:{self.users[user_id].data['classStr']}")
-                self.users[user_id].data['classStr'] = t.format_class(self.users[user_id].data['classStr'])
+                self.users[user_id].data['classStr'] = t.format_class(self.users[user_id].data['classStr'], self.db)
                 print(f"Bs2.2-formated {self.users[user_id].data['classStr']}")
                 if self.users[user_id].status == "Bs2.2":
                     self.users[user_id].status = "Bs3"
@@ -1127,9 +1145,7 @@ class Bot():
             
             self.api.reply_message(event.reply_token, message)
 
-        # except Exception as e:
-        #     print(e)
-        #     self.api.push_message(user_id, TextSendMessage(text="確認按鈕傳送錯誤，請再試一次或聯絡管理員 錯誤代碼: E0004")) # 按鈕發生錯誤
+
     
     
     # 個人資訊確認按鈕處理 User Setting
@@ -1285,7 +1301,7 @@ class Bot():
                 
     # 管理員許可1
     def handle_Admin1(self, event, user_id,text):
-        result = re.findall(AdminConfirmPatter, text)
+        result = re.findall(self.AdmConPattern, text)
     
         note = False
         reply_message = "已更新:"

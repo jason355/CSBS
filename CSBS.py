@@ -4,7 +4,7 @@ import time
 
 ngrok_command = "ngrok http 5000"
 script1 = "./LB/resetBot.py"
-script2 = "./server/monitor.py"
+script2 = "./server/monitor_V1.2.py"
 process = subprocess.Popen(ngrok_command, creationflags=subprocess.CREATE_NEW_CONSOLE)
 
 time.sleep(2)
