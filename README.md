@@ -1,5 +1,8 @@
 # Campus Slient Broadcasting System
 ---
+
+> [!NOTE]
+> Linebot 必須使用resetbot.py 啟動否則會無法判斷是否為首次開啟
 ## Overall
 本系主要目的為透過Linebot、server、Android app，三部分實現無聲廣播。(Android app 請見: [App](https://github.com/jason355/CSBS-Yunan))
 以下是本系統架構圖。
@@ -18,6 +21,8 @@ Server 將會偵測新訊息並且傳送至指定Android App。
 
 ## Line Bot
 ![image](https://github.com/user-attachments/assets/8ffae464-efbc-4df3-a43f-ff7832545b2d)
+
+
 
 ## Server
 ![server relations chart](https://github.com/user-attachments/assets/cbee0379-926f-4e67-bef1-5f24ed1ecec1)
