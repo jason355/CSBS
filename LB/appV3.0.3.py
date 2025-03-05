@@ -1,6 +1,6 @@
 import os, sys
-from implementV3_0_2 import Teacher, Bot
-import databaseV3_0_2
+from implementV3_0_3 import Teacher, Bot
+import databaseV3_0_3
 from urllib.parse import parse_qsl
 from linebot.models import  FollowEvent, MessageEvent, TextMessage, TextSendMessage, UnfollowEvent, PostbackEvent
 from linebot.exceptions import InvalidSignatureError
@@ -23,12 +23,12 @@ handler = WebhookHandler(channel_secret) # 建立 webhook 實例
 users = {} # 建立 users 字典
 
 
-errorText = "*An Error in appV3.0.2" # 錯誤訊息基本文字
+errorText = "*An Error in appV3.0.3" # 錯誤訊息基本文字
 global errorIndex # 錯誤訊息索引值紀錄
 errorIndex = 1 # 初始化索引值
 
 
-db = databaseV3_0_2.mydatabase()
+db = databaseV3_0_3.mydatabase()
 
 
 Manager = Bot(line_bot_api, db, users) # Bot 實例 在 implement 中定義

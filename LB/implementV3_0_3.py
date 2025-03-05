@@ -1,14 +1,14 @@
-# version 3.0.2
+# version 3.0.3
 import re, json, sys, requests, subprocess
 from linebot.models import  TextSendMessage, PostbackTemplateAction, TemplateSendMessage, ButtonsTemplate, PostbackAction, DatetimePickerTemplateAction,MessageAction, URIAction, QuickReply, QuickReplyButton
 from datetime import date, timedelta
-import imple_toolV3_0_2 as t
+import imple_toolV3_0_3 as t
 from datetime import datetime
 from sqlalchemy import exc
 
 
 
-errorText = "*An Error in implementV3.0.2"
+errorText = "*An Error in implementV3.0.3"
 contactInfo = "{contactInfo}"
 error_messages  = []
 global errorIndex
@@ -47,26 +47,30 @@ class Bot():
         
 
     def init(self):
-        if not self.config["Dynamic"]["initial_start"]:
-            for teacher in self.db.GetAllTeacherID():
-                self.api.push_message(teacher, TextSendMessage(text="系統重啟完成✅")) 
+        if not self.db.GetAllTeacherID():
+            print(f"第一次使用，複製下方網址至Linebot後台webhook。並且使用Line向機器人發送訊息，再回設定。")
+            self.webhook_url = self.query_ngork_url(self.config["Basic"]["query_url"])
         else:
-            self.config["Dynamic"]["initial_start"] = False
-            with open("config.json", "w", encoding="utf-8") as f:
-                f.write(json.dumps(self.config, indent=4))
+            if not self.config["Dynamic"]["initial_start"]:
+                for teacher in self.db.GetAllTeacherID():
+                    self.api.push_message(teacher, TextSendMessage(text="系統重啟完成✅")) 
+            else:
+                self.config["Dynamic"]["initial_start"] = False
+                with open("config.json", "w", encoding="utf-8") as f:
+                    f.write(json.dumps(self.config, indent=4))
 
-        self.webhook_url = self.query_ngork_url(self.config["Basic"]["query_url"])
+            self.webhook_url = self.query_ngork_url(self.config["Basic"]["query_url"])
 
-        if self.config["Basic"]["ngrok_url"] == "":
-            self.config["Basic"]["ngrok_url"] = self.webhook_url
-            self.send_link_to_admin()
-            with open("config.json", "w") as f:
-                f.write(json.dumps(self.config, indent=4))
-        elif self.config["Basic"]["ngrok_url"] != self.webhook_url:
-            self.config["Basic"]["ngrok_url"] = self.webhook_url
-            self.send_link_to_admin()
-            with open("config.json", "w") as f:
-                f.write(json.dumps(self.config, indent=4))
+            if self.config["Basic"]["ngrok_url"] == "":
+                self.config["Basic"]["ngrok_url"] = self.webhook_url
+                self.send_link_to_admin()
+                with open("config.json", "w") as f:
+                    f.write(json.dumps(self.config, indent=4))
+            elif self.config["Basic"]["ngrok_url"] != self.webhook_url:
+                self.config["Basic"]["ngrok_url"] = self.webhook_url
+                self.send_link_to_admin()
+                with open("config.json", "w") as f:
+                    f.write(json.dumps(self.config, indent=4))
     # 抓取ngrok url
     def query_ngork_url(self, url):
         try:
@@ -86,6 +90,8 @@ class Bot():
                 self.config["Dynamic"]["initial_start"] = True
                 f.write(json.dumps(self.config, indent=4))
             sys.exit()
+
+
     # 傳送連結至管理員
     def send_link_to_admin(self):
         adminList = self.db.findAdmin()
