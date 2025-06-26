@@ -1,6 +1,6 @@
 import os, sys
-from implementV3_0_3 import Teacher, Bot
-import databaseV3_0_3
+from implementV3_0_4 import Teacher, Bot
+import databaseV3_0_4 as database
 from urllib.parse import parse_qsl
 from linebot.models import  FollowEvent, MessageEvent, TextMessage, TextSendMessage, UnfollowEvent, PostbackEvent
 from linebot.exceptions import InvalidSignatureError
@@ -8,6 +8,15 @@ from linebot import LineBotApi, WebhookHandler
 from flask import Flask, request, abort, jsonify, render_template
 from werkzeug.serving import make_server
 from sqlalchemy import exc
+import logging
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(message)s'
+)
+
+
 
 app = Flask(__name__) # 建立 Flask 物件
 
@@ -23,12 +32,12 @@ handler = WebhookHandler(channel_secret) # 建立 webhook 實例
 users = {} # 建立 users 字典
 
 
-errorText = "*An Error in appV3.0.3" # 錯誤訊息基本文字
+errorText = "*An Error in appV3.0.4" # 錯誤訊息基本文字
 global errorIndex # 錯誤訊息索引值紀錄
 errorIndex = 1 # 初始化索引值
 
 
-db = databaseV3_0_3.mydatabase()
+db = database.mydatabase()
 
 
 Manager = Bot(line_bot_api, db, users) # Bot 實例 在 implement 中定義
@@ -41,13 +50,14 @@ Manager.init()
 def callback(): # 定義一個名為callback的函數
     signature = request.headers["X-Line-Signature"] # 從請求頭部獲取X-Line-Signature
     body = request.get_data(as_text=True) # 從請求中獲取數據，並將其作為文本返回
+    logging.info("Received body: %s", body)
     try: 
         handler.handle(body, signature) # 調用handler的handle方法來處理請求
     except InvalidSignatureError as Invalid: # 如果簽名無效，則觸發InvalidSignatureError異常
-        print(Invalid)
+        logging.error(Invalid)
         abort(400)  # 返回HTTP狀態碼400，表示請求無效
     except Exception as e:
-        print(e)
+        logging.error("Error in hcallback", exc_info=True)
     return 'OK'  # 返回OK字串，表示請求已經成功處理
 
 # 訊息傳輸失敗回傳
@@ -61,15 +71,14 @@ def test():
     print(cls, time, tea, message)
     try:
         id = db.getID(tea) # 取得傳輸者 Line ID
-        print(id)
         if id : # 若不為空值則傳輸錯誤訊息
             line_bot_api.push_message(id.lineID, TextSendMessage(text=f"資料傳輸失敗\n原定派送班級 : {cls}\n訊息內容 : {message}\n發送時間 : {time}"))
-            print(f"資料傳輸失敗\n原定派送班級\n:id:{id.lineID}\n{cls}\n訊息內容 :{message}\n發送時間 :{time}")
+            logging.info(f"資料傳輸失敗\n原定派送班級\n:id:{id.lineID}\n{cls}\n訊息內容 :{message}\n發送時間 :{time}")
         print("data process success")
         return  jsonify({"status": "success"})
     except Exception as e: # 若try下方有任何exception會跳到此然後更新error網站顯示錯誤訊息
         error = f"{errorText}-test()\n{e}"
-        print(error)
+        logging.error(error, exc_info=True)
         Manager.addError(error)
     
 
@@ -77,24 +86,30 @@ def test():
 # 錯誤訊息網頁
 @app.route('/errors', methods=['GET'])
 def show_errors():
-    error_messages = Manager.getErrorList()     # 取得在implement 中的error List
+    try:
+        error_messages = Manager.getErrorList()     # 取得在implement 中的error List
+    except Exception as e:
+        logging.error(exc_info=True)
+
     return render_template('errors.html', errors=error_messages) # 渲染畫面顯示error list
 
 # 班級列表
 @app.route('/classList', methods=['GET'])
 def showClassList():
+    logging.info("Request received: /classList")
     try:
         codeList = db.getClassCodeList()
         nameList = db.getClassNameList()
         return render_template('classList.html', length = len(codeList),codeList=codeList, nameList=nameList)
     except Exception as e:
         error = f"{errorText}-showClassList\n{e}"
-        print(error)
+        logging.error(error, exc_info=True)
         Manager.addError(error)
 
 # 及時廣播訊息狀態
 @app.route('/realtimedata/<user_id>', methods=['GET'])
 def realtimedata(user_id):
+    logging.info("Request received: /realtimedata/%s", user_id)
     try:
         data = db.get_sended_data(user_id)   
         if user_id not in Manager.users:
@@ -104,16 +119,26 @@ def realtimedata(user_id):
         return render_template("index.html", username = username, data = data)
     except Exception as e:
         error = f"{errorText}-realtimedata\n{e}"
-        print(error)
+        logging.error(error, exc_info=True)
         Manager.addError(error)
 
 
 # 教師初次登入
 @handler.add(FollowEvent)
 def handle_follow(event):
+    logging.info("Handling FollowEvent for user_id=%s", user_id)
     user_id = event.source.user_id # 取得使用者 Line ID
-    if db.findAdmin(): # 確認是否有管理員在資料庫中
+    admin_exists = False
+    try:
+        logging.info("Database access: Using db.findAdmin()")
+        admin_exists = db.findAdmin()
+    except RuntimeError as RE:
+        error = f"{errorText}-handle_follow()\n{RE}"
+        logging.error(error, exc_info=True)
+
+    if admin_exists: # 確認是否有管理員在資料庫中
         Manager.users[user_id] = Teacher(user_id, status = "FSs1") # 設定首次登入之 Teacher 物件 詳細在implement中
+        logging.info("Registered teacher user:%s", user_id)
         reply_message = "老師好, 請輸入您的名稱"
         line_bot_api.reply_message(  # 回傳文字 reply_message
             event.reply_token, TextSendMessage(text=reply_message))
@@ -122,9 +147,12 @@ def handle_follow(event):
         office = input("請輸入管理員所在組別> ")
         try:
             db.insertAdmin(user_id, {'name':name, 'office':office, 'verifyStat':1, 'isAdmin':1})
+            logging.info("Inserted admin to DB: name=%s, office=%s", name, office)
+
         except Exception as e:
             error = f"{errorText}-handle_follow()\n{e}"
-            print(error)
+            logging.error(error, exc_info=True)
+            logging.info("Restart system...")
             Manager.addError(error)
             sys.exit()
         
@@ -133,14 +161,24 @@ def handle_follow(event):
 def handle_unfollow(event):
     user_id = event.source.user_id # 取得使用者 Line ID
     try:
+        logging.info("Handling UnfollowEvent for user_id=%s", user_id)
         teacher = db.findTeacher(user_id) # 取得教師資訊
+    except RuntimeError as RE:
+        logging.error("Failed to get user info", exc_info=True)
+    
+    try:
         if teacher: # 如果teacher 為真
             del Manager.users[user_id] # 刪除在 Manager 物件 users 中的資料
-            db.DelTeacherData(user_id) # 刪除資料庫中的使用者資料
-            print(f"Unfollowed by {user_id}")
+            logging.info("Deleting user:%s from Manager object", user_id)
+            try:
+                db.DelTeacherData(user_id) # 刪除資料庫中的使用者資料
+                logging.info("removing user:%s from database", user_id)
+            except RuntimeError:
+                logging.error("Failed to remove user:%s from database", user_id, exc_info=True)
+                Manager.addError(error)
     except Exception as e:
         error = f"{errorText}-handle_unfollow()\n{e}"
-        print(error)
+        logging.error(error, exc_info=True)
         Manager.addError(error)
     
 
@@ -193,24 +231,30 @@ action_handlers = {
 @handler.add(PostbackEvent)
 def handle_postback(event):
     user_id = event.source.user_id
+    logging.info("Handling follow event from user_id=%s", user_id)
     backdata = dict(parse_qsl(event.postback.data))
 
     if not db.findAdmin():
+        logging.info("Waiting user's input...")
         name = input("請輸入管理員名稱> ")
         office = input("請輸入管理員所在組別> ")
         try:
             db.insertAdmin(user_id, {'name':name, 'office':office, 'verifyStat':1, 'isAdmin':1})
-        
+            logging.info("Inserting Admin(name:%s, office:%s) to database", name, office)
         except Exception as e:
-            print(f"*An Error: {e}")
+            error = f"{errorText}-handle_postback()\n{e}"
+            logging.error(error, exc_info=True)
+            logging.info("Restart system...")
             Manager.addError(e)
             sys.exit()
     
     # 程式開啟後第一次加入，建立物件
     if user_id not in Manager.users:
         Manager.users[user_id] = Teacher(user_id, status = "Fs")
+        logging.info("First time added user:%s, added it to Manager", user_id)
         try:
             teacher = db.getTeacher(user_id)
+            logging.info("Get userL%s info", user_id)
             if teacher:
                 Manager.users[user_id].name = teacher.name
                 Manager.users[user_id].office = teacher.office
@@ -229,10 +273,11 @@ def handle_postback(event):
                 
         except exc.OperationalError as oe:
                 line_bot_api.api.reply_message(event.reply_token, TextSendMessage(text="⚠️伺服器連線錯誤，請再試一次"))
-
+                logging.error("exc.OperationalError happened", exc_info=True)
         except Exception as e:
-            print(f"{errorText}-handle_message()\n{e}")
-            Manager.addError(e)
+            error = f"{errorText}-handle_postback()\n{e}"
+            logging.error(error, exc_info=True)
+            Manager.addError(error)
             reply_message = "資料庫異常，請再試一次或是洽詢 #9611資訊組"
             line_bot_api.push_message(user_id, TextSendMessage(text=reply_message))
 
@@ -240,6 +285,7 @@ def handle_postback(event):
         get = backdata.get('action') # 取得action
         handler = action_handlers.get(get) # 取得action對應函數
         if handler:
+            logging.info("running function:%s", get)
             handler(event, user_id)
         
         
@@ -271,19 +317,23 @@ status_handlers = {
 def handle_message(event):
     text = event.message.text
     user_id = event.source.user_id
+    logging.info("Handling message event from user_id:%s", user_id)
 
     if not db.findAdmin():
         name = input("請輸入管理員名稱> ")
         office = input("請輸入管理員所在處室> ")
         try:
             db.insertAdmin(user_id, {'name':name, 'office':office, 'verifyStat':1, 'isAdmin':1})
+            logging.info("Inserted Admin:%s to database", user_id)
         except Exception as e:
-            print(f"*An Error: {e}")
-            Manager.addError(e)
+            error = f"{errorText}-handle_message()\n{e}"
+            logging.error(error, exc_info=True)
+            Manager.addError(error)
             sys.exit()
 
     # 判斷是否有在字典中
     if user_id not in Manager.users:
+        logging.info("user detected: user:%s. Creating Teacher oject.", user_id)
         Manager.users[user_id] = Teacher(user_id, status = "Fs")
         try:
             teacher = db.getTeacher(user_id)
@@ -292,18 +342,22 @@ def handle_message(event):
                 Manager.users[user_id].office = teacher.office
                 if teacher.isAdmin == 1:
                     Manager.users[user_id].isAdm = 1
-
+                    logging.info("User %s is an admin.", user_id)
                 status = Manager.users[user_id].status # 取得用戶狀態
                 handler = status_handlers.get(status) # 取得對應函數
                 if handler:
+                    logging.info("Dispatching handler for status:'%s' for user_id:%s", status)
                     handler(event, user_id, text)
+                else:
+                    logging.warning("No handler found for user_id=%s with status='%s'", user_id, status)
             else:
                 Manager.users[user_id].status = "FSs1"
+                logging.info("No teacher record found in DB for user_id:%s. Asking for name", user_id)
                 reply_message =  "老師好, 請輸入您的名稱"
                 line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=reply_message))
         except Exception as e:
-            print(f"{errorText}-handle_message()\n{e}")
+            logging.error("Exception while handling new user (user_id=%s)", user_id, exc_info=True)
             Manager.addError(e)
             reply_message = "資料庫異常，請再試一次或是洽詢 #9611資訊組"
             line_bot_api.push_message(user_id, TextSendMessage(text=reply_message))
@@ -312,8 +366,10 @@ def handle_message(event):
         status = Manager.users[user_id].status # 取得用戶狀態
         handler = status_handlers.get(status) # 取得對應函數
         if handler:
+            logging.info("Existing user: user_id=%s with status='%s'. Dispatching handler.", user_id, status)
             handler(event, user_id, text)
-        
+        else:
+            logging.warning("Handler not found for existing user: user_id=%s with status='%s'", user_id, status)        
 
 
 if __name__ == '__main__':

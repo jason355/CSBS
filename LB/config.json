@@ -1,11 +1,11 @@
 {
     "Basic": {
-        "version": "V3.0.3",
-        "ngrok_url": "https://33e6-2001-b011-14-d4dd-fcb8-5cda-7bdb-8494.ngrok-free.app/callback",
+        "version": "V3.0.4",
+        "ngrok_url": "https://aa63-2001-b011-14-f5da-fc34-f000-75db-b7e0.ngrok-free.app/callback",
         "query_url": "http://127.0.0.1:4040/api/tunnels"
     },
     "Dynamic": {
-        "initial_start": true
+        "initial_start": false
     },
     "personal": {
         "class_list": [

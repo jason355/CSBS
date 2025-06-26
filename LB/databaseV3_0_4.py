@@ -1,4 +1,4 @@
-# version 3.0.3
+# version 3.0.4
 
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, Text, DateTime, update, SmallInteger, desc
 from sqlalchemy.ext.declarative import declarative_base

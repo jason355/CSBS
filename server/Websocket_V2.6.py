@@ -13,8 +13,8 @@ from contextlib import contextmanager
 import gc
 
 # 請於此設定伺服器和 Line Bot 相關的連接信息
-ip = "192.168.56.1"
-port = 8000
+ip = "192.168.88.1"
+port = 80
 line_bot_server_url = "https://d8b6-140-119-99-80.ngrok-free.app/return"
 
 # 使用 WeakKeyDictionary 儲存客戶端與監控數據，減少記憶體使用
