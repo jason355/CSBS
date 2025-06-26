@@ -43,7 +43,7 @@ async def check_server(uri):
 def cleanup_old_process():
     try:
         print("Cleaning up old processes...")
-        process_name = r"H:\My Drive\SWBS_Mother\upload\Server\websocket_v2.6.py"
+        process_name = r"C:\\Users\\yuxia\\SWBS\\server\\py-server demo\\V2.5\\Websocket_V2.5.py"
         
         # 使用 wmic 來檢查執行中的 Python 進程
         tasklist_output = subprocess.check_output(
@@ -119,9 +119,9 @@ def schedule_restart(restart_command):
     schedule.every().day.at("18:59").do(cleanup_old_process)  # 每日 18:59 執行清理操作
 
 if __name__ == "__main__":
-    websocket_uri = "ws://192.168.88.1:80"
+    websocket_uri = "ws://192.168.56.1:8000"
     check_interval = 1  # 設定檢查伺服器狀態的時間間隔
-    restart_command = r'python "H:\My Drive\SWBS_Mother\upload\Server\websocket_v2.6.py"'
+    restart_command = r'python "C:\Users\yuxia\SWBS\server\py-server demo\V2.5\Websocket_V2.5.py"'
 
     schedule_restart(restart_command)
 
