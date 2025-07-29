@@ -1,14 +1,14 @@
-# version 3.0.4
+# version 3.0.5
 import re, json, sys, requests, subprocess
 from linebot.models import  TextSendMessage, PostbackTemplateAction, TemplateSendMessage, ButtonsTemplate, PostbackAction, DatetimePickerTemplateAction,MessageAction, URIAction, QuickReply, QuickReplyButton
 from datetime import date, timedelta
-import imple_toolV3_0_4 as t
+import imple_toolV3_0_5 as t
 from datetime import datetime
 from sqlalchemy import exc
 
 
 
-errorText = "*An Error in implementV3.0.4"
+errorText = "*An Error in implementV3.0.5"
 contactInfo = "{contactInfo}"
 error_messages  = []
 global errorIndex
@@ -108,7 +108,41 @@ class Bot():
         errorIndex += 1
     
     def getErrorList(self):
-        return error_messages 
+        return error_messages
+
+
+
+    def del_user(self, user_id):
+        """Delet User through web page"""
+        return self.db.DelTeacherData(user_id)
+
+
+    def load_users(self):
+        '''Load users for web page'''
+        try:
+            id_list = self.db.GetAllTeacherID()
+        except Exception as e:
+            error = f"{errorText}-load_users\n{e}"
+            print(error)
+            self.addError(e)
+
+        users = []
+        for id in id_list:
+            try:
+                user = self.db.getTeacher(id)
+            except Exception as e:
+                error = f"{errorText}-load_users\n{e}"
+                print(error)
+                self.addError(e)
+            temp = {
+                "id":id,
+                "name":user.name,
+                "office":user.office,
+                "isAdmin": user.isAdmin
+            }
+            users.append(temp)
+        return users
+
 
     # 傳送功能選單
     def SendButton(self, event, user_id):
@@ -1655,36 +1689,16 @@ class Bot():
                     self.api.reply_message(event.reply_token, message)
 
                 elif text == "@userList":
-                    try:
-                        AllTeacher = self.db.GetAllTeacherID() # 取得所有教師ID
-                    except exc.OperationalError as oe:
-                        print(oe)
-                        self.api.reply_message(event.reply_toekn, TextSendMessage(text="⚠️資料庫連線錯誤，請再試一次"))
-                    except Exception as e:
-                        error = f"{errorText}-handle_Fs-self.db.GetAllTeacherID()\n{e}"
-                        print(error)
-                        self.addError(error)
-                        reply_message = "資料庫取得錯誤，請再試一次或是洽 #9611資訊組"
-                        self.api.push_message(user_id, TextSendMessage(text=reply_message))
-                        
-                    else: 
-                        if AllTeacher:
-                            reply_message = f"🔴以下是教師列表 共{len(AllTeacher)}位:"
-                            for user in AllTeacher:
-                                try:
-                                    get = self.db.getTeacher(user) # 因透過資料庫取得教師ID，故不會有空值
-                                    if get:
-                                        if user != user_id:
-                                            reply_message += "\n▶️ "+ get.name+" "+get.office
-                                        else:
-                                            reply_message += "\n▶️ "+get.name+" (您)"+" "+get.office
-                                except Exception as e:
-                                    error = f"{errorText}-handler_Fs()\n{e}"
-                                    print(error)
-                                    self.addError(error)
-                                    reply_message = "資料庫錯誤，請再試一次或是查看錯誤訊息"
-                                    break
-                            self.api.reply_message(event.reply_token, TextSendMessage(text=reply_message))
+                    quick_reply = QuickReply(items=[
+                        QuickReplyButton(action=URIAction(label="查看教師列表", uri=f"{self.webhook_url[:-8]}/admin/{user_id}"))
+                    ])
+                    
+                    # 回應訊息，並附上 Quick Reply 按鈕
+                    reply_message = TextSendMessage(
+                        text="點擊按鈕查看教師列表",
+                        quick_reply=quick_reply
+                    )
+                    self.api.reply_message(event.reply_token, reply_message)
                 elif text == "@delData":
                     self.users[user_id].status = "Ds" # Reset status
 

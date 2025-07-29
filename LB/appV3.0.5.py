@@ -1,6 +1,6 @@
 import os, sys
-from implementV3_0_4 import Teacher, Bot
-import databaseV3_0_4 as database
+from implementV3_0_5 import Teacher, Bot
+import databaseV3_0_5 as database
 from urllib.parse import parse_qsl
 from linebot.models import  FollowEvent, MessageEvent, TextMessage, TextSendMessage, UnfollowEvent, PostbackEvent
 from linebot.exceptions import InvalidSignatureError
@@ -32,7 +32,7 @@ handler = WebhookHandler(channel_secret) # 建立 webhook 實例
 users = {} # 建立 users 字典
 
 
-errorText = "*An Error in appV3.0.4" # 錯誤訊息基本文字
+errorText = "*An Error in appV3.0.5" # 錯誤訊息基本文字
 global errorIndex # 錯誤訊息索引值紀錄
 errorIndex = 1 # 初始化索引值
 
@@ -121,6 +121,70 @@ def realtimedata(user_id):
         error = f"{errorText}-realtimedata\n{e}"
         logging.error(error, exc_info=True)
         Manager.addError(error)
+
+
+
+
+# --- Flask Routes ---
+
+@app.route('/admin/<user_id>')
+def manage_users(user_id):
+    """Renders the main user management page."""
+    logging.info("Request received: /admin/%s", user_id)
+    if db.isAdmin(user_id):
+        users = Manager.load_users()
+        return render_template('index-2.html', users=users)
+    else:
+        return render_template('forbidden.html')
+
+@app.route('/delete_user/<user_id>', methods=['POST'])
+def delete_user(user_id):
+    """Deletes a user from the database by ID."""
+    logging.info("Request received: /delete_user/%s", user_id)
+    users = Manager.load_users()
+    initial_len = len(users)
+    # Filter out the user to be deleted
+    users = [user for user in users if user['id'] != user_id]
+
+    if len(users) == initial_len:
+        return jsonify({'success': False, 'message': 'User not found'}), 404
+
+    ack = Manager.del_user(user_id)
+    return jsonify({'success': ack, 'message': 'User deleted successfully'})
+
+@app.route('/search_users', methods=['GET'])
+def search_users():
+    """Searches for users by name or email."""
+    logging.info("Request received: /search_users")
+    query = request.args.get('query', '').lower()
+
+    # Get isAdmin filter parameter
+    is_admin_filter_str = request.args.get('isAdmin')
+    is_admin_filter = None # Default to no filter
+    if is_admin_filter_str is not None:
+        is_admin_filter = is_admin_filter_str.lower() == "true" # Convert to boolean
+
+
+    users = Manager.load_users()
+    filtered_users = []
+
+    for user in users:
+        match_query = True
+        if query: # Apply text search if query is not empty
+            match_query = query in user['name'].lower() or query in user['office'].lower()
+
+        
+        match_admin_filter = True
+        if is_admin_filter is not None: # Apply admin filter if it's set
+            # Ensure user['isAdmin'] exists and is a boolean for comparison
+            user_is_admin = user.get('isAdmin', False) # Default to False if not present
+            match_admin_filter = (user_is_admin == is_admin_filter)
+
+
+        if match_query and match_admin_filter:
+            filtered_users.append(user)
+
+    return jsonify(filtered_users)
 
 
 # 教師初次登入

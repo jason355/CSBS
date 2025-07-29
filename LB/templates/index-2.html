@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSBS User Management</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for a modern look */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center p-4">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">CSBS User Management</h1>
+
+        <!-- Search Box -->
+        <div class="mb-6">
+            <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search Users:</label>
+            <div class="flex items-center space-x-4">
+                <input
+                    type="text"
+                    id="search"
+                    class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Search by name"
+                />
+                <button
+                    id="adminFilterBtn"
+                    class="px-4 py-2 bg-gray-400 text-white rounded-full hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out whitespace-nowrap"
+                >
+                    Admin
+                </button>
+                <button
+                    id="generalUserFilterBtn"
+                    class="px-4 py-2 bg-gray-400 text-white rounded-full hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out whitespace-nowrap"
+                >
+                    General User
+                </button>
+                <button
+                    id="clearFilterBtn"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out whitespace-nowrap"
+                >
+                    All
+                </button>
+            </div>
+        </div>
+
+        <!-- User List -->
+        <h2 class="text-xl font-semibold text-gray-700 mb-3">User List</h2>
+        <div id="userListContainer">
+            <!-- Users will be dynamically loaded here by JavaScript -->
+                <p class="text-gray-500 text-center" id="noUsersMessage">No users found matching your search.</p>            <ul id="usersList" class="space-y-3">
+                <!-- User items will be inserted here -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirm Deletion</h3>
+            <p class="text-gray-700 mb-6">
+                Are you sure you want to delete user "<span id="userNameToDelete" class="font-medium"></span>"? This action cannot be undone.
+            </p>
+            <div class="flex justify-end space-x-3">
+                <button
+                    id="cancelDeleteBtn"
+                    class="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+                >
+                    Cancel
+                </button>
+                <button
+                    id="confirmDeleteBtn"
+                    class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+                >
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set up Tailwind CSS configuration for Inter font
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        };
+
+        const searchInput = document.getElementById('search');
+        const usersList = document.getElementById('usersList');
+        const noUsersMessage = document.getElementById('noUsersMessage');
+
+        const adminFilterBtn = document.getElementById('adminFilterBtn');
+        const generalUserFilterBtn = document.getElementById('generalUserFilterBtn');
+        const clearFilterBtn = document.getElementById('clearFilterBtn');
+        let currentAdminFilter = null; // null for all, true for admin, false for general
+
+        const deleteModal = document.getElementById('deleteModal');
+        const userNameToDeleteSpan = document.getElementById('userNameToDelete');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+
+        let currentUserToDelete = null; // To store the ID of the user being deleted
+        let activeFilterButtonId = 'clearFilterBtn'; // Tracks which button is currently "on"
+        // Function to update the visual state of filter buttons
+        function updateFilterButtonStyles() {
+            // Reset all buttons to gray
+            adminFilterBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            adminFilterBtn.classList.add('bg-gray-400', 'hover:bg-gray-500');
+
+            generalUserFilterBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            generalUserFilterBtn.classList.add('bg-gray-400', 'hover:bg-gray-500');
+
+            clearFilterBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            clearFilterBtn.classList.add('bg-gray-400', 'hover:bg-gray-500');
+
+            // Set the active button to blue
+            if (activeFilterButtonId === 'adminFilterBtn') {
+                adminFilterBtn.classList.remove('bg-gray-400', 'hover:bg-gray-500');
+                adminFilterBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            } else if (activeFilterButtonId === 'generalUserFilterBtn') {
+                generalUserFilterBtn.classList.remove('bg-gray-400', 'hover:bg-gray-500');
+                generalUserFilterBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            } else if (activeFilterButtonId === 'clearFilterBtn') {
+                clearFilterBtn.classList.remove('bg-gray-400', 'hover:bg-gray-500');
+                clearFilterBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            }
+        }
+
+
+
+
+        // Function to fetch and render users
+        async function fetchAndRenderUsers(query = '', isAdminFilter = null) {
+            try {
+                let url = `/search_users?query=${encodeURIComponent(query)}`;
+                if (isAdminFilter !== null) {
+                    url += `&isAdmin=${isAdminFilter}`;
+                }
+
+
+                const response = await fetch(url);
+                const users = await response.json();
+
+                usersList.innerHTML = ''; // Clear current list
+                if (users.length === 0) {
+                    noUsersMessage.classList.remove('hidden');
+                } else {
+                    noUsersMessage.classList.add('hidden');
+                    users.sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+                    users.forEach(user => {
+                        const li = document.createElement('li');
+                        li.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-md border border-gray-200 shadow-sm';
+                        li.innerHTML = `
+                            <div>
+                                <p class="text-gray-800 ${user.isAdmin ? 'font-bold' : 'font-medium'}">${user.name}</p>
+                                <p class="text-gray-600 text-sm">${user.office}</p>
+                            </div>
+                            <button
+                                data-user-id="${user.id}"
+                                data-user-name="${user.name}"
+                                class="delete-btn bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+                            >
+                                Delete
+                            </button>
+                        `;
+                        usersList.appendChild(li);
+                    });
+
+                    // Add event listeners to new delete buttons
+                    document.querySelectorAll('.delete-btn').forEach(button => {
+                        button.onclick = (event) => {
+                            const userId = event.target.dataset.userId;
+                            const userName = event.target.dataset.userName;
+                            currentUserToDelete = userId;
+                            userNameToDeleteSpan.textContent = userName;
+                            deleteModal.classList.remove('hidden');
+                        };
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                alert('Failed to load users. Please try again.'); // Using alert for simplicity, consider custom modal
+            }
+        }
+
+        // Event listeners for filter buttons
+        adminFilterBtn.addEventListener('click', () => {
+            currentAdminFilter = true;
+            searchInput.value = ''; // Clear search when filtering
+            activeFilterButtonId = 'adminFilterBtn'; // Set active button
+            updateFilterButtonStyles(); // Update styles
+            fetchAndRenderUsers('', currentAdminFilter);
+        });
+
+        generalUserFilterBtn.addEventListener('click', () => {
+            currentAdminFilter = false;
+            searchInput.value = ''; // Clear search when filtering
+            activeFilterButtonId = 'generalUserFilterBtn'; // Set active button
+            updateFilterButtonStyles(); // Update styles
+            fetchAndRenderUsers('', currentAdminFilter);
+        });
+
+        clearFilterBtn.addEventListener('click', () => {
+            currentAdminFilter = null;
+            searchInput.value = ''; // Clear search when clearing filter
+            activeFilterButtonId = 'clearFilterBtn'; // Set active button
+            updateFilterButtonStyles(); // Update styles
+            fetchAndRenderUsers('', currentAdminFilter);
+        });
+
+
+        // Event listener for Search input
+        searchInput.addEventListener('input', () => {
+            currentAdminFilter = null;
+            activeFilterButtonId = null; // No filter button is active when searching
+            updateFilterButtonStyles(); // Update styles
+            fetchAndRenderUsers(searchInput.value, currentAdminFilter);
+        });
+
+        // Event listeners for Delete Confirmation Modal
+        confirmDeleteBtn.addEventListener('click', async () => {
+            if (currentUserToDelete) {
+                try {
+                    const response = await fetch(`/delete_user/${currentUserToDelete}`, {
+                        method: 'POST', // Using POST for deletion as it's simpler with forms/buttons
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    const result = await response.json();
+                    if (result.success) {
+                        fetchAndRenderUsers(searchInput.value); // Re-render list
+                    } else {
+                        alert('Error deleting user: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error deleting user:', error);
+                    alert('Failed to delete user. Please try again.');
+                } finally {
+                    deleteModal.classList.add('hidden'); // Hide modal
+                    currentUserToDelete = null;
+                }
+            }
+        });
+
+        cancelDeleteBtn.addEventListener('click', () => {
+            deleteModal.classList.add('hidden');
+            currentUserToDelete = null;
+        });
+
+
+        // Event listeners for filter buttons
+        adminFilterBtn.addEventListener('click', () => {
+            currentAdminFilter = true;
+            searchInput.value = ''; // Clear search when filtering
+            fetchAndRenderUsers('', currentAdminFilter);
+        });
+
+        generalUserFilterBtn.addEventListener('click', () => {
+            currentAdminFilter = false;
+            searchInput.value = ''; // Clear search when filtering
+            fetchAndRenderUsers('', currentAdminFilter);
+        });
+
+        clearFilterBtn.addEventListener('click', () => {
+            currentAdminFilter = null;
+            searchInput.value = ''; // Clear search when clearing filter
+            fetchAndRenderUsers('', currentAdminFilter);
+        });
+
+        // Initial load of users and button styles when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial filter state and fetch users first
+            currentAdminFilter = null; // Ensure no admin filter is active
+            fetchAndRenderUsers('', currentAdminFilter); // This will fetch ALL users
+
+            // Then, set the active button visual state
+            activeFilterButtonId = 'clearFilterBtn'; // Mark 'All' button as active
+            updateFilterButtonStyles(); // Apply the initial button styles
+        });
+    </script>
+</body>
+</html>

@@ -21,7 +21,7 @@ class Template:
     def get_AdmConPattern():
         return r'(\d+-\d+|\d+)'
 
-errorText = "*An Error in imple_toolV3_0_2"
+errorText = "*An Error in imple_toolV3_0_5"
 
 
 # 產生 SHA-1

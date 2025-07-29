@@ -1,4 +1,4 @@
-# version 3.0.4
+# version 3.0.5
 
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, Text, DateTime, update, SmallInteger, desc
 from sqlalchemy.ext.declarative import declarative_base
@@ -110,6 +110,14 @@ class mydatabase:
             raise RuntimeError(f"Error 1016: From getTeacher() {e}")
 
     def findTeacher(self, lineId):
+        '''
+        ## Objective
+            Use lineId to check if the user exist. If exist return True else return False
+        ## Input
+            - lineId
+        ## Output
+            - True or False:boolean
+        '''
         try:
             with self.Session() as session:
                 find_teacher = session.query(tea_infor).filter(
@@ -347,3 +355,6 @@ class mydatabase:
         except Exception as e:
             raise RuntimeError(f"Error 1000: From get_sended_data() {e}")
         
+# mydatabase = mydatabase()
+
+# print(mydatabase.GetAllTeacherID())

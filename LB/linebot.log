@@ -1,0 +1,404 @@
+2025-07-29 21:48:30,895 [INFO] --- RESETBOT START ---
+2025-07-29 21:48:30,929 [INFO] --- CHILD START ---
+2025-07-29 21:48:31,701 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:28: LineBotSdkDeprecatedIn30: Call to deprecated class LineBotApi. (Use v3 class; linebot.v3.<feature>. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 21:48:31,701 [INFO] [CHILD STDOUT] line_bot_api = LineBotApi(channel_access_token) #  建立 Line bot API 實例
+2025-07-29 21:48:31,702 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:29: LineBotSdkDeprecatedIn30: Call to deprecated class WebhookHandler. (Use 'from linebot.v3.webhook import WebhookHandler' instead. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 21:48:31,702 [INFO] [CHILD STDOUT] handler = WebhookHandler(channel_secret) # 建立 webhook 實例
+2025-07-29 21:48:31,882 [INFO] [CHILD STDOUT] package: mysql.connector.plugins
+2025-07-29 21:48:31,883 [INFO] [CHILD STDOUT] plugin_name: caching_sha2_password
+2025-07-29 21:48:31,884 [INFO] [CHILD STDOUT] AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-07-29 21:48:34,754 [INFO] Child process finished.
+2025-07-29 21:48:35,757 [INFO] --- CHILD START ---
+2025-07-29 21:48:36,378 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:28: LineBotSdkDeprecatedIn30: Call to deprecated class LineBotApi. (Use v3 class; linebot.v3.<feature>. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 21:48:36,378 [INFO] [CHILD STDOUT] line_bot_api = LineBotApi(channel_access_token) #  建立 Line bot API 實例
+2025-07-29 21:48:36,379 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:29: LineBotSdkDeprecatedIn30: Call to deprecated class WebhookHandler. (Use 'from linebot.v3.webhook import WebhookHandler' instead. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 21:48:36,379 [INFO] [CHILD STDOUT] handler = WebhookHandler(channel_secret) # 建立 webhook 實例
+2025-07-29 21:48:36,574 [INFO] [CHILD STDOUT] package: mysql.connector.plugins
+2025-07-29 21:48:36,574 [INFO] [CHILD STDOUT] plugin_name: caching_sha2_password
+2025-07-29 21:48:36,574 [INFO] [CHILD STDOUT] AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-07-29 21:48:37,455 [ERROR] [CHILD STDERR] Traceback (most recent call last):
+2025-07-29 21:48:37,455 [INFO] [CHILD STDOUT] ngrok URL: https://942431f3cc42.ngrok-free.app/callback
+2025-07-29 21:48:37,455 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 44, in <module>
+2025-07-29 21:48:37,459 [INFO] [CHILD STDOUT] Manager.init()
+2025-07-29 21:48:37,460 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\implementV3_0_5.py", line 71, in init
+2025-07-29 21:48:37,476 [INFO] [CHILD STDOUT] self.send_link_to_admin()
+2025-07-29 21:48:37,477 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\implementV3_0_5.py", line 99, in send_link_to_admin
+2025-07-29 21:48:37,481 [INFO] [CHILD STDOUT] self.api.push_message(admin, TextSendMessage(text= f"Linebot 已啟動，請至 https://developers.line.biz/console/channel/2000168053/messaging-api 更新\nLink: {self.webhook_url}"))
+2025-07-29 21:48:37,482 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\deprecated\classic.py", line 285, in wrapper_function
+2025-07-29 21:48:37,496 [INFO] [CHILD STDOUT] return wrapped_(*args_, **kwargs_)
+2025-07-29 21:48:37,497 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-07-29 21:48:37,497 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\api.py", line 174, in push_message
+2025-07-29 21:48:37,498 [INFO] [CHILD STDOUT] self._post(
+2025-07-29 21:48:37,498 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\api.py", line 2116, in _post
+2025-07-29 21:48:37,499 [INFO] [CHILD STDOUT] self.__check_error(response)
+2025-07-29 21:48:37,499 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\api.py", line 2152, in __check_error
+2025-07-29 21:48:37,499 [ERROR] [CHILD STDERR] raise LineBotApiError(
+2025-07-29 21:48:37,500 [ERROR] [CHILD STDERR] linebot.exceptions.LineBotApiError: LineBotApiError: status_code=400, request_id=0c596338-05dd-4dba-a19c-f527abc8cac8, error_response={"details": [], "message": "The property, 'to', in the request body is invalid (line: -, column: -)"}, headers={'Server': 'legy', 'Content-Type': 'application/json', 'x-content-type-options': 'nosniff', 'x-frame-options': 'DENY', 'x-line-request-id': '0c596338-05dd-4dba-a19c-f527abc8cac8', 'x-xss-protection': '1; mode=block', 'Content-Length': '85', 'Expires': 'Tue, 29 Jul 2025 13:48:30 GMT', 'Cache-Control': 'max-age=0, no-cache, no-store', 'Pragma': 'no-cache', 'Date': 'Tue, 29 Jul 2025 13:48:30 GMT', 'Connection': 'close'}
+2025-07-29 21:48:37,583 [INFO] Child process finished.
+2025-07-29 21:48:38,589 [INFO] --- CHILD START ---
+2025-07-29 21:48:39,168 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:28: LineBotSdkDeprecatedIn30: Call to deprecated class LineBotApi. (Use v3 class; linebot.v3.<feature>. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 21:48:39,168 [INFO] [CHILD STDOUT] line_bot_api = LineBotApi(channel_access_token) #  建立 Line bot API 實例
+2025-07-29 21:48:39,168 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:29: LineBotSdkDeprecatedIn30: Call to deprecated class WebhookHandler. (Use 'from linebot.v3.webhook import WebhookHandler' instead. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 21:48:39,169 [INFO] [CHILD STDOUT] handler = WebhookHandler(channel_secret) # 建立 webhook 實例
+2025-07-29 21:48:39,339 [INFO] [CHILD STDOUT] package: mysql.connector.plugins
+2025-07-29 21:48:39,341 [INFO] [CHILD STDOUT] plugin_name: caching_sha2_password
+2025-07-29 21:48:39,341 [INFO] [CHILD STDOUT] AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-07-29 21:48:39,701 [ERROR] [CHILD STDERR] Traceback (most recent call last):
+2025-07-29 21:48:39,701 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 44, in <module>
+2025-07-29 21:48:39,704 [INFO] [CHILD STDOUT] Manager.init()
+2025-07-29 21:48:39,705 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\implementV3_0_5.py", line 56, in init
+2025-07-29 21:48:39,707 [INFO] [CHILD STDOUT] self.api.push_message(teacher, TextSendMessage(text="系統重啟完成\u2705"))
+2025-07-29 21:48:39,707 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-07-29 21:48:39,708 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\deprecated\classic.py", line 285, in wrapper_function
+2025-07-29 21:48:39,709 [INFO] [CHILD STDOUT] return wrapped_(*args_, **kwargs_)
+2025-07-29 21:48:39,709 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-07-29 21:48:39,709 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\api.py", line 174, in push_message
+2025-07-29 21:48:39,710 [INFO] [CHILD STDOUT] self._post(
+2025-07-29 21:48:39,710 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\api.py", line 2116, in _post
+2025-07-29 21:48:39,710 [INFO] [CHILD STDOUT] self.__check_error(response)
+2025-07-29 21:48:39,710 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\api.py", line 2152, in __check_error
+2025-07-29 21:48:39,711 [ERROR] [CHILD STDERR] raise LineBotApiError(
+2025-07-29 21:48:39,711 [ERROR] [CHILD STDERR] linebot.exceptions.LineBotApiError: LineBotApiError: status_code=400, request_id=c4171b62-6abd-44bf-b381-8ca8f202de49, error_response={"details": [], "message": "Failed to send messages"}, headers={'Server': 'legy', 'Content-Type': 'application/json', 'x-content-type-options': 'nosniff', 'x-frame-options': 'DENY', 'x-line-request-id': 'c4171b62-6abd-44bf-b381-8ca8f202de49', 'x-xss-protection': '1; mode=block', 'Content-Length': '37', 'Expires': 'Tue, 29 Jul 2025 13:48:32 GMT', 'Cache-Control': 'max-age=0, no-cache, no-store', 'Pragma': 'no-cache', 'Date': 'Tue, 29 Jul 2025 13:48:32 GMT', 'Connection': 'close'}
+2025-07-29 21:48:39,785 [INFO] Child process finished.
+2025-07-29 21:48:40,790 [INFO] --- CHILD START ---
+2025-07-29 21:48:41,353 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:28: LineBotSdkDeprecatedIn30: Call to deprecated class LineBotApi. (Use v3 class; linebot.v3.<feature>. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 21:48:41,353 [INFO] [CHILD STDOUT] line_bot_api = LineBotApi(channel_access_token) #  建立 Line bot API 實例
+2025-07-29 21:48:41,355 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:29: LineBotSdkDeprecatedIn30: Call to deprecated class WebhookHandler. (Use 'from linebot.v3.webhook import WebhookHandler' instead. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 21:48:41,355 [INFO] [CHILD STDOUT] handler = WebhookHandler(channel_secret) # 建立 webhook 實例
+2025-07-29 21:48:41,524 [INFO] [CHILD STDOUT] package: mysql.connector.plugins
+2025-07-29 21:48:41,525 [INFO] [CHILD STDOUT] plugin_name: caching_sha2_password
+2025-07-29 21:48:41,525 [INFO] [CHILD STDOUT] AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-07-29 21:48:41,819 [ERROR] [CHILD STDERR] Traceback (most recent call last):
+2025-07-29 21:48:41,820 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 44, in <module>
+2025-07-29 21:48:41,824 [INFO] [CHILD STDOUT] Manager.init()
+2025-07-29 21:48:41,824 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\implementV3_0_5.py", line 56, in init
+2025-07-29 21:48:41,827 [INFO] [CHILD STDOUT] self.api.push_message(teacher, TextSendMessage(text="系統重啟完成\u2705"))
+2025-07-29 21:48:41,827 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-07-29 21:48:41,828 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\deprecated\classic.py", line 285, in wrapper_function
+2025-07-29 21:48:41,828 [INFO] [CHILD STDOUT] return wrapped_(*args_, **kwargs_)
+2025-07-29 21:48:41,829 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-07-29 21:48:41,829 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\api.py", line 174, in push_message
+2025-07-29 21:48:41,830 [INFO] [CHILD STDOUT] self._post(
+2025-07-29 21:48:41,830 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\api.py", line 2116, in _post
+2025-07-29 21:48:41,831 [INFO] [CHILD STDOUT] self.__check_error(response)
+2025-07-29 21:48:41,831 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\api.py", line 2152, in __check_error
+2025-07-29 21:48:41,831 [ERROR] [CHILD STDERR] raise LineBotApiError(
+2025-07-29 21:48:41,832 [ERROR] [CHILD STDERR] linebot.exceptions.LineBotApiError: LineBotApiError: status_code=400, request_id=95758ddc-1840-4cb4-9f19-0d197919a931, error_response={"details": [], "message": "Failed to send messages"}, headers={'Server': 'legy', 'Content-Type': 'application/json', 'x-content-type-options': 'nosniff', 'x-frame-options': 'DENY', 'x-line-request-id': '95758ddc-1840-4cb4-9f19-0d197919a931', 'x-xss-protection': '1; mode=block', 'Content-Length': '37', 'Expires': 'Tue, 29 Jul 2025 13:48:34 GMT', 'Cache-Control': 'max-age=0, no-cache, no-store', 'Pragma': 'no-cache', 'Date': 'Tue, 29 Jul 2025 13:48:34 GMT', 'Connection': 'close'}
+2025-07-29 21:48:41,907 [INFO] Child process finished.
+2025-07-29 22:05:54,479 [INFO] --- RESETBOT START ---
+2025-07-29 22:05:54,507 [INFO] --- CHILD START ---
+2025-07-29 22:05:55,130 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:28: LineBotSdkDeprecatedIn30: Call to deprecated class LineBotApi. (Use v3 class; linebot.v3.<feature>. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 22:05:55,130 [INFO] [CHILD STDOUT] line_bot_api = LineBotApi(channel_access_token) #  建立 Line bot API 實例
+2025-07-29 22:05:55,131 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:29: LineBotSdkDeprecatedIn30: Call to deprecated class WebhookHandler. (Use 'from linebot.v3.webhook import WebhookHandler' instead. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 22:05:55,131 [INFO] [CHILD STDOUT] handler = WebhookHandler(channel_secret) # 建立 webhook 實例
+2025-07-29 22:05:55,301 [INFO] [CHILD STDOUT] package: mysql.connector.plugins
+2025-07-29 22:05:55,302 [INFO] [CHILD STDOUT] plugin_name: caching_sha2_password
+2025-07-29 22:05:55,302 [INFO] [CHILD STDOUT] AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-07-29 22:06:01,853 [INFO] [CHILD STDOUT] Received body: {"destination":"U8cdcd70cd74f89bf21c3680faad1dd57","events":[{"type":"message","message":{"type":"text","id":"572047113350283452","quoteToken":"FpztXRiVyRQJnbofAzZvuLw_7lWOKj8Tcfi9oyxqD8UKEZ_JtgyTh7RNqFyKv3UL9ClGIXidPY1NjeOMm-6tstJZXYSwh4ls0qdetiUAs50pX33Q5wuT6pHwk7Hnw_jExG2IJqIcBVo0SppczVfB3g","text":"adsfs"},"webhookEventId":"01K1B822T8TA5RRGT8Q5MP0GN5","deliveryContext":{"isRedelivery":false},"timestamp":1753797953868,"source":{"type":"user","userId":"Uaf14190a82dbcf01d7b0e3bfb2e003e2"},"replyToken":"3396e006e89544d88e9517e9d7e3be1a","mode":"active"}]}
+2025-07-29 22:06:01,853 [INFO] [CHILD STDOUT] Handling message event from user_id:Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:06:01,855 [INFO] [CHILD STDOUT] user detected: user:Uaf14190a82dbcf01d7b0e3bfb2e003e2. Creating Teacher oject.
+2025-07-29 22:06:01,856 [INFO] [CHILD STDOUT] User Uaf14190a82dbcf01d7b0e3bfb2e003e2 is an admin.
+2025-07-29 22:06:01,858 [INFO] [CHILD STDOUT] --- Logging error ---
+2025-07-29 22:06:01,858 [ERROR] [CHILD STDERR] Traceback (most recent call last):
+2025-07-29 22:06:01,859 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\logging\__init__.py", line 1110, in emit
+2025-07-29 22:06:01,859 [INFO] [CHILD STDOUT] msg = self.format(record)
+2025-07-29 22:06:01,860 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^
+2025-07-29 22:06:01,860 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\logging\__init__.py", line 953, in format
+2025-07-29 22:06:01,860 [INFO] [CHILD STDOUT] return fmt.format(record)
+2025-07-29 22:06:01,860 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^
+2025-07-29 22:06:01,862 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\logging\__init__.py", line 687, in format
+2025-07-29 22:06:01,862 [INFO] [CHILD STDOUT] record.message = record.getMessage()
+2025-07-29 22:06:01,862 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^
+2025-07-29 22:06:01,862 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\logging\__init__.py", line 377, in getMessage
+2025-07-29 22:06:01,863 [INFO] [CHILD STDOUT] msg = msg % self.args
+2025-07-29 22:06:01,863 [INFO] [CHILD STDOUT] ~~~~^~~~~~~~~~~
+2025-07-29 22:06:01,863 [ERROR] [CHILD STDERR] TypeError: not enough arguments for format string
+2025-07-29 22:06:01,863 [INFO] [CHILD STDOUT] Call stack:
+2025-07-29 22:06:01,864 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 441, in <module>
+2025-07-29 22:06:01,864 [INFO] [CHILD STDOUT] http_server.serve_forever()
+2025-07-29 22:06:01,864 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\werkzeug\serving.py", line 819, in serve_forever
+2025-07-29 22:06:01,864 [INFO] [CHILD STDOUT] super().serve_forever(poll_interval=poll_interval)
+2025-07-29 22:06:01,866 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 238, in serve_forever
+2025-07-29 22:06:01,866 [INFO] [CHILD STDOUT] self._handle_request_noblock()
+2025-07-29 22:06:01,866 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 317, in _handle_request_noblock
+2025-07-29 22:06:01,866 [INFO] [CHILD STDOUT] self.process_request(request, client_address)
+2025-07-29 22:06:01,866 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 348, in process_request
+2025-07-29 22:06:01,866 [INFO] [CHILD STDOUT] self.finish_request(request, client_address)
+2025-07-29 22:06:01,867 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 361, in finish_request
+2025-07-29 22:06:01,867 [INFO] [CHILD STDOUT] self.RequestHandlerClass(request, client_address, self)
+2025-07-29 22:06:01,867 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 755, in __init__
+2025-07-29 22:06:01,867 [INFO] [CHILD STDOUT] self.handle()
+2025-07-29 22:06:01,867 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\werkzeug\serving.py", line 398, in handle
+2025-07-29 22:06:01,869 [INFO] [CHILD STDOUT] super().handle()
+2025-07-29 22:06:01,869 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\http\server.py", line 432, in handle
+2025-07-29 22:06:01,869 [INFO] [CHILD STDOUT] self.handle_one_request()
+2025-07-29 22:06:01,869 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\http\server.py", line 420, in handle_one_request
+2025-07-29 22:06:01,869 [INFO] [CHILD STDOUT] method()
+2025-07-29 22:06:01,870 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+2025-07-29 22:06:01,870 [INFO] [CHILD STDOUT] execute(self.server.app)
+2025-07-29 22:06:01,870 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\werkzeug\serving.py", line 331, in execute
+2025-07-29 22:06:01,871 [INFO] [CHILD STDOUT] application_iter = app(environ, start_response)
+2025-07-29 22:06:01,871 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 1498, in __call__
+2025-07-29 22:06:01,871 [INFO] [CHILD STDOUT] return self.wsgi_app(environ, start_response)
+2025-07-29 22:06:01,871 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 1473, in wsgi_app
+2025-07-29 22:06:01,871 [INFO] [CHILD STDOUT] response = self.full_dispatch_request()
+2025-07-29 22:06:01,871 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 880, in full_dispatch_request
+2025-07-29 22:06:01,872 [INFO] [CHILD STDOUT] rv = self.dispatch_request()
+2025-07-29 22:06:01,872 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 865, in dispatch_request
+2025-07-29 22:06:01,872 [INFO] [CHILD STDOUT] return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+2025-07-29 22:06:01,874 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 55, in callback
+2025-07-29 22:06:01,874 [INFO] [CHILD STDOUT] handler.handle(body, signature) # 調用handler的handle方法來處理請求
+2025-07-29 22:06:01,874 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\webhook.py", line 278, in handle
+2025-07-29 22:06:01,874 [INFO] [CHILD STDOUT] self.__invoke_func(func, event, payload)
+2025-07-29 22:06:01,874 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\webhook.py", line 290, in __invoke_func
+2025-07-29 22:06:01,874 [INFO] [CHILD STDOUT] func(event)
+2025-07-29 22:06:01,875 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 413, in handle_message
+2025-07-29 22:06:01,875 [INFO] [CHILD STDOUT] logging.info("Dispatching handler for status:'%s' for user_id:%s", status)
+2025-07-29 22:06:01,875 [INFO] [CHILD STDOUT] Message: "Dispatching handler for status:'%s' for user_id:%s"
+2025-07-29 22:06:01,875 [INFO] [CHILD STDOUT] Arguments: ('Fs',)
+2025-07-29 22:06:02,027 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:06:02] "POST /callback HTTP/1.1" 200 -
+2025-07-29 22:06:06,111 [INFO] [CHILD STDOUT] Received body: {"destination":"U8cdcd70cd74f89bf21c3680faad1dd57","events":[{"type":"postback","postback":{"data":"action=@Adm_func"},"webhookEventId":"01K1B8270PSVVCDN9EP3FTD659","deliveryContext":{"isRedelivery":false},"timestamp":1753797958176,"source":{"type":"user","userId":"Uaf14190a82dbcf01d7b0e3bfb2e003e2"},"replyToken":"2e149e387d7e48818d101a2a5429334c","mode":"active"}]}
+2025-07-29 22:06:06,111 [INFO] [CHILD STDOUT] Handling follow event from user_id=Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:06:06,113 [INFO] [CHILD STDOUT] running function:@Adm_func
+2025-07-29 22:06:06,295 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:06:06] "POST /callback HTTP/1.1" 200 -
+2025-07-29 22:06:09,486 [INFO] [CHILD STDOUT] Received body: {"destination":"U8cdcd70cd74f89bf21c3680faad1dd57","events":[{"type":"message","message":{"type":"text","id":"572047126235185681","quoteToken":"eC8NX-bB_iYXEfE_IQffYBh3RPWrkErNDLhK1I_2KAemoTyWh86bNgxmyaqB4R0s8s9ILwUsi173kCi--N6W8IdtPHQbJuopFEPJ7soXBxLp62zwO886VyuXXi40vvDtGy1vI7jv_Gne5G43bJwNoA","text":"@userList"},"webhookEventId":"01K1B82AB2RAFZ6503VVSJ0BAB","deliveryContext":{"isRedelivery":false},"timestamp":1753797961554,"source":{"type":"user","userId":"Uaf14190a82dbcf01d7b0e3bfb2e003e2"},"replyToken":"0fccbd59fd9b437a95990fdc855d8165","mode":"active"}]}
+2025-07-29 22:06:09,486 [INFO] [CHILD STDOUT] Handling message event from user_id:Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:06:09,487 [INFO] [CHILD STDOUT] Existing user: user_id=Uaf14190a82dbcf01d7b0e3bfb2e003e2 with status='Fs'. Dispatching handler.
+2025-07-29 22:06:09,662 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:06:09] "POST /callback HTTP/1.1" 200 -
+2025-07-29 22:06:12,915 [INFO] [CHILD STDOUT] Request received: /admin/Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:06:12,954 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:06:12] "GET /admin/Uaf14190a82dbcf01d7b0e3bfb2e003e2 HTTP/1.1" 200 -
+2025-07-29 22:06:14,080 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:06:14,084 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:06:14] "GET /search_users?query= HTTP/1.1" 200 -
+2025-07-29 22:06:14,101 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:06:14] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-29 22:06:22,930 [INFO] [CHILD STDOUT] Request received: /delete_user/Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:06:22,943 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:06:22] "POST /delete_user/Uaf14190a82dbcf01d7b0e3bfb2e003e2 HTTP/1.1" 200 -
+2025-07-29 22:06:23,025 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:06:23,046 [ERROR] [CHILD STDERR] Exception on /search_users [GET]
+2025-07-29 22:06:23,047 [ERROR] [CHILD STDERR] Traceback (most recent call last):
+2025-07-29 22:06:23,047 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 1473, in wsgi_app
+2025-07-29 22:06:23,047 [INFO] [CHILD STDOUT] response = self.full_dispatch_request()
+2025-07-29 22:06:23,048 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-07-29 22:06:23,048 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 882, in full_dispatch_request
+2025-07-29 22:06:23,048 [INFO] [CHILD STDOUT] rv = self.handle_user_exception(e)
+2025-07-29 22:06:23,048 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-07-29 22:06:23,048 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 880, in full_dispatch_request
+2025-07-29 22:06:23,048 [INFO] [CHILD STDOUT] rv = self.dispatch_request()
+2025-07-29 22:06:23,048 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^^^^^
+2025-07-29 22:06:23,049 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 865, in dispatch_request
+2025-07-29 22:06:23,049 [INFO] [CHILD STDOUT] return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+2025-07-29 22:06:23,049 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-07-29 22:06:23,049 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 168, in search_users
+2025-07-29 22:06:23,051 [INFO] [CHILD STDOUT] users = Manager.load_users()
+2025-07-29 22:06:23,051 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^^
+2025-07-29 22:06:23,051 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\implementV3_0_5.py", line 130, in load_users
+2025-07-29 22:06:23,051 [INFO] [CHILD STDOUT] for id in id_list:
+2025-07-29 22:06:23,052 [ERROR] [CHILD STDERR] TypeError: 'bool' object is not iterable
+2025-07-29 22:06:23,052 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:06:23] "[35m[1mGET /search_users?query= HTTP/1.1[0m" 500 -
+2025-07-29 22:06:27,560 [INFO] [CHILD STDOUT] Request received: /admin/Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:06:27,581 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:06:27] "GET /admin/Uaf14190a82dbcf01d7b0e3bfb2e003e2 HTTP/1.1" 200 -
+2025-07-29 22:06:30,669 [INFO] [CHILD STDOUT] ngrok URL: https://942431f3cc42.ngrok-free.app/callback
+2025-07-29 22:06:31,432 [INFO] --- RESETBOT START ---
+2025-07-29 22:06:31,467 [INFO] --- CHILD START ---
+2025-07-29 22:06:32,039 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:28: LineBotSdkDeprecatedIn30: Call to deprecated class LineBotApi. (Use v3 class; linebot.v3.<feature>. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 22:06:32,039 [INFO] [CHILD STDOUT] line_bot_api = LineBotApi(channel_access_token) #  建立 Line bot API 實例
+2025-07-29 22:06:32,039 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:29: LineBotSdkDeprecatedIn30: Call to deprecated class WebhookHandler. (Use 'from linebot.v3.webhook import WebhookHandler' instead. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 22:06:32,041 [INFO] [CHILD STDOUT] handler = WebhookHandler(channel_secret) # 建立 webhook 實例
+2025-07-29 22:06:32,228 [INFO] [CHILD STDOUT] package: mysql.connector.plugins
+2025-07-29 22:06:32,229 [INFO] [CHILD STDOUT] plugin_name: caching_sha2_password
+2025-07-29 22:06:32,230 [INFO] [CHILD STDOUT] AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-07-29 22:06:37,877 [INFO] [CHILD STDOUT] Received body: {"destination":"U8cdcd70cd74f89bf21c3680faad1dd57","events":[{"type":"message","message":{"type":"text","id":"572047174503498683","quoteToken":"f5be1zBediR7-eqKkSZaYJUWzWRaM5jWkADn9f1v3p47Gtp5ARqtxBWAQ1Zka1qQ2X9ommZjiRjWCS22qDht4SVqXvDFtgTe0od9cjdsNT9UkXBe5P-YA3Nsqwk0yGpA_6RkrpLzuFT-kJoOBITuhA","text":"asdf"},"webhookEventId":"01K1B83612TYJX4GJVZ03JF1XD","deliveryContext":{"isRedelivery":false},"timestamp":1753797990406,"source":{"type":"user","userId":"Uaf14190a82dbcf01d7b0e3bfb2e003e2"},"replyToken":"e54ac6892a44402b9b58d513adea128c","mode":"active"}]}
+2025-07-29 22:06:37,877 [INFO] [CHILD STDOUT] Handling message event from user_id:Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:06:37,879 [INFO] [CHILD STDOUT] 第一次使用，複製下方網址至Linebot後台webhook。並且使用Line向機器人發送訊息，再回設定。
+2025-07-29 22:06:37,880 [INFO] [CHILD STDOUT] ngrok URL: https://942431f3cc42.ngrok-free.app/callback
+2025-07-29 22:07:04,801 [INFO] [CHILD STDOUT] Inserted Admin:Uaf14190a82dbcf01d7b0e3bfb2e003e2 to database
+2025-07-29 22:07:04,802 [INFO] [CHILD STDOUT] user detected: user:Uaf14190a82dbcf01d7b0e3bfb2e003e2. Creating Teacher oject.
+2025-07-29 22:07:04,802 [INFO] [CHILD STDOUT] User Uaf14190a82dbcf01d7b0e3bfb2e003e2 is an admin.
+2025-07-29 22:07:04,803 [INFO] [CHILD STDOUT] --- Logging error ---
+2025-07-29 22:07:04,803 [ERROR] [CHILD STDERR] Traceback (most recent call last):
+2025-07-29 22:07:04,804 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\logging\__init__.py", line 1110, in emit
+2025-07-29 22:07:04,804 [INFO] [CHILD STDOUT] msg = self.format(record)
+2025-07-29 22:07:04,805 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^
+2025-07-29 22:07:04,805 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\logging\__init__.py", line 953, in format
+2025-07-29 22:07:04,805 [INFO] [CHILD STDOUT] return fmt.format(record)
+2025-07-29 22:07:04,806 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^
+2025-07-29 22:07:04,806 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\logging\__init__.py", line 687, in format
+2025-07-29 22:07:04,806 [INFO] [CHILD STDOUT] record.message = record.getMessage()
+2025-07-29 22:07:04,807 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^
+2025-07-29 22:07:04,807 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\logging\__init__.py", line 377, in getMessage
+2025-07-29 22:07:04,807 [INFO] [CHILD STDOUT] msg = msg % self.args
+2025-07-29 22:07:04,807 [INFO] [CHILD STDOUT] ~~~~^~~~~~~~~~~
+2025-07-29 22:07:04,807 [ERROR] [CHILD STDERR] TypeError: not enough arguments for format string
+2025-07-29 22:07:04,808 [INFO] [CHILD STDOUT] Call stack:
+2025-07-29 22:07:04,808 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 441, in <module>
+2025-07-29 22:07:04,808 [INFO] [CHILD STDOUT] http_server.serve_forever()
+2025-07-29 22:07:04,809 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\werkzeug\serving.py", line 819, in serve_forever
+2025-07-29 22:07:04,810 [INFO] [CHILD STDOUT] super().serve_forever(poll_interval=poll_interval)
+2025-07-29 22:07:04,810 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 238, in serve_forever
+2025-07-29 22:07:04,810 [INFO] [CHILD STDOUT] self._handle_request_noblock()
+2025-07-29 22:07:04,810 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 317, in _handle_request_noblock
+2025-07-29 22:07:04,811 [INFO] [CHILD STDOUT] self.process_request(request, client_address)
+2025-07-29 22:07:04,811 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 348, in process_request
+2025-07-29 22:07:04,811 [INFO] [CHILD STDOUT] self.finish_request(request, client_address)
+2025-07-29 22:07:04,811 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 361, in finish_request
+2025-07-29 22:07:04,812 [INFO] [CHILD STDOUT] self.RequestHandlerClass(request, client_address, self)
+2025-07-29 22:07:04,812 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 755, in __init__
+2025-07-29 22:07:04,812 [INFO] [CHILD STDOUT] self.handle()
+2025-07-29 22:07:04,813 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\werkzeug\serving.py", line 398, in handle
+2025-07-29 22:07:04,813 [INFO] [CHILD STDOUT] super().handle()
+2025-07-29 22:07:04,813 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\http\server.py", line 432, in handle
+2025-07-29 22:07:04,814 [INFO] [CHILD STDOUT] self.handle_one_request()
+2025-07-29 22:07:04,814 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\http\server.py", line 420, in handle_one_request
+2025-07-29 22:07:04,814 [INFO] [CHILD STDOUT] method()
+2025-07-29 22:07:04,814 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+2025-07-29 22:07:04,815 [INFO] [CHILD STDOUT] execute(self.server.app)
+2025-07-29 22:07:04,815 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\werkzeug\serving.py", line 331, in execute
+2025-07-29 22:07:04,815 [INFO] [CHILD STDOUT] application_iter = app(environ, start_response)
+2025-07-29 22:07:04,816 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 1498, in __call__
+2025-07-29 22:07:04,816 [INFO] [CHILD STDOUT] return self.wsgi_app(environ, start_response)
+2025-07-29 22:07:04,816 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 1473, in wsgi_app
+2025-07-29 22:07:04,816 [INFO] [CHILD STDOUT] response = self.full_dispatch_request()
+2025-07-29 22:07:04,817 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 880, in full_dispatch_request
+2025-07-29 22:07:04,817 [INFO] [CHILD STDOUT] rv = self.dispatch_request()
+2025-07-29 22:07:04,818 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 865, in dispatch_request
+2025-07-29 22:07:04,818 [INFO] [CHILD STDOUT] return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+2025-07-29 22:07:04,819 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 55, in callback
+2025-07-29 22:07:04,819 [INFO] [CHILD STDOUT] handler.handle(body, signature) # 調用handler的handle方法來處理請求
+2025-07-29 22:07:04,819 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\webhook.py", line 278, in handle
+2025-07-29 22:07:04,820 [INFO] [CHILD STDOUT] self.__invoke_func(func, event, payload)
+2025-07-29 22:07:04,820 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\webhook.py", line 290, in __invoke_func
+2025-07-29 22:07:04,820 [INFO] [CHILD STDOUT] func(event)
+2025-07-29 22:07:04,821 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 413, in handle_message
+2025-07-29 22:07:04,821 [INFO] [CHILD STDOUT] logging.info("Dispatching handler for status:'%s' for user_id:%s", status)
+2025-07-29 22:07:04,822 [INFO] [CHILD STDOUT] Message: "Dispatching handler for status:'%s' for user_id:%s"
+2025-07-29 22:07:04,822 [INFO] [CHILD STDOUT] Arguments: ('Fs',)
+2025-07-29 22:07:05,026 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:05] "POST /callback HTTP/1.1" 200 -
+2025-07-29 22:07:05,027 [INFO] [CHILD STDOUT] Received body: {"destination":"U8cdcd70cd74f89bf21c3680faad1dd57","events":[{"type":"message","message":{"type":"text","id":"572047194082246912","quoteToken":"HnLpuyiPILXty29W_XfeytXSgogmECeXyZaiBcHuGaAldWiLOTnKVK44r1B0dvIQfcIJ7uGMR8Uv1K3ueuLWTdtYwGTdL7U0xT8Vd9VuM49Xivxr8sSWL3t8GCyagr58QmxaaF4KVQmOJaXca_O9wA","text":"asdf"},"webhookEventId":"01K1B83HQNCZDQA0HE2EJTZRV9","deliveryContext":{"isRedelivery":false},"timestamp":1753798001987,"source":{"type":"user","userId":"Uaf14190a82dbcf01d7b0e3bfb2e003e2"},"replyToken":"a4a55efb3d2c4bfbaa72789dfe7b8583","mode":"active"}]}
+2025-07-29 22:07:05,027 [INFO] [CHILD STDOUT] Handling message event from user_id:Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:07:05,028 [INFO] [CHILD STDOUT] Existing user: user_id=Uaf14190a82dbcf01d7b0e3bfb2e003e2 with status='Fs'. Dispatching handler.
+2025-07-29 22:07:05,191 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:05] "POST /callback HTTP/1.1" 200 -
+2025-07-29 22:07:12,821 [INFO] [CHILD STDOUT] Received body: {"destination":"U8cdcd70cd74f89bf21c3680faad1dd57","events":[{"type":"postback","postback":{"data":"action=@Adm_func"},"webhookEventId":"01K1B84840AQTK9KJ4D70Q77Q1","deliveryContext":{"isRedelivery":false},"timestamp":1753798024842,"source":{"type":"user","userId":"Uaf14190a82dbcf01d7b0e3bfb2e003e2"},"replyToken":"12b453af76c142ab90e45e699d9b0a14","mode":"active"}]}
+2025-07-29 22:07:12,821 [INFO] [CHILD STDOUT] Handling follow event from user_id=Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:07:12,823 [INFO] [CHILD STDOUT] running function:@Adm_func
+2025-07-29 22:07:13,002 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:13] "POST /callback HTTP/1.1" 200 -
+2025-07-29 22:07:15,088 [INFO] [CHILD STDOUT] Request received: /admin/Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:07:15,131 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:15] "GET /admin/Uaf14190a82dbcf01d7b0e3bfb2e003e2 HTTP/1.1" 200 -
+2025-07-29 22:07:15,430 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:07:15,434 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:15] "GET /search_users?query= HTTP/1.1" 200 -
+2025-07-29 22:07:21,036 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:07:21,039 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:21] "GET /search_users?query= HTTP/1.1" 200 -
+2025-07-29 22:07:21,152 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:07:21,155 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:21] "GET /search_users?query= HTTP/1.1" 200 -
+2025-07-29 22:07:21,862 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:07:21,866 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:21] "GET /search_users?query=&isAdmin=true HTTP/1.1" 200 -
+2025-07-29 22:07:22,072 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:07:22,074 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:22] "GET /search_users?query=&isAdmin=true HTTP/1.1" 200 -
+2025-07-29 22:07:22,339 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:07:22,343 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:22] "GET /search_users?query=&isAdmin=false HTTP/1.1" 200 -
+2025-07-29 22:07:22,438 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:07:22,441 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:22] "GET /search_users?query=&isAdmin=false HTTP/1.1" 200 -
+2025-07-29 22:07:23,510 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:07:23,513 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:23] "GET /search_users?query=&isAdmin=true HTTP/1.1" 200 -
+2025-07-29 22:07:23,620 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:07:23,625 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:23] "GET /search_users?query=&isAdmin=true HTTP/1.1" 200 -
+2025-07-29 22:07:24,087 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:07:24,090 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:24] "GET /search_users?query= HTTP/1.1" 200 -
+2025-07-29 22:07:24,175 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:07:24,178 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:07:24] "GET /search_users?query= HTTP/1.1" 200 -
+2025-07-29 22:07:28,351 [INFO] [CHILD STDOUT] 請輸入管理員名稱> 請輸入管理員所在處室>
+2025-07-29 22:08:57,921 [INFO] --- RESETBOT START ---
+2025-07-29 22:08:57,945 [INFO] --- CHILD START ---
+2025-07-29 22:08:58,587 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:28: LineBotSdkDeprecatedIn30: Call to deprecated class LineBotApi. (Use v3 class; linebot.v3.<feature>. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 22:08:58,587 [INFO] [CHILD STDOUT] line_bot_api = LineBotApi(channel_access_token) #  建立 Line bot API 實例
+2025-07-29 22:08:58,587 [INFO] [CHILD STDOUT] H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py:29: LineBotSdkDeprecatedIn30: Call to deprecated class WebhookHandler. (Use 'from linebot.v3.webhook import WebhookHandler' instead. See https://github.com/line/line-bot-sdk-python/blob/master/README.rst for more details.) -- Deprecated since version 3.0.0.
+2025-07-29 22:08:58,587 [INFO] [CHILD STDOUT] handler = WebhookHandler(channel_secret) # 建立 webhook 實例
+2025-07-29 22:08:58,771 [INFO] [CHILD STDOUT] package: mysql.connector.plugins
+2025-07-29 22:08:58,771 [INFO] [CHILD STDOUT] plugin_name: caching_sha2_password
+2025-07-29 22:08:58,772 [INFO] [CHILD STDOUT] AUTHENTICATION_PLUGIN_CLASS: MySQLCachingSHA2PasswordAuthPlugin
+2025-07-29 22:09:13,575 [INFO] [CHILD STDOUT] Received body: {"destination":"U8cdcd70cd74f89bf21c3680faad1dd57","events":[{"type":"message","message":{"type":"text","id":"572047435086955058","quoteToken":"0MrgFvI6pro80d9AQj28Sw5YJM7DgQyGizmr9e_0porHv3xoxyPQWvO_3ufRurlF15dxZDVvoVuzpSYTYnUXinLp9OTd_vkvLfzHK2nceMKyiszyBC3Qwm_CKCY_MLLwPnne5sI3KkMMQA35Jd5_kw","text":"asdf"},"webhookEventId":"01K1B87Y348TDJN8YH8HDFK8XM","deliveryContext":{"isRedelivery":false},"timestamp":1753798145643,"source":{"type":"user","userId":"Uaf14190a82dbcf01d7b0e3bfb2e003e2"},"replyToken":"57f7d7cf168649638686afddfa7f440f","mode":"active"}]}
+2025-07-29 22:09:13,576 [INFO] [CHILD STDOUT] Handling message event from user_id:Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:09:13,578 [INFO] [CHILD STDOUT] user detected: user:Uaf14190a82dbcf01d7b0e3bfb2e003e2. Creating Teacher oject.
+2025-07-29 22:09:13,579 [INFO] [CHILD STDOUT] User Uaf14190a82dbcf01d7b0e3bfb2e003e2 is an admin.
+2025-07-29 22:09:13,580 [INFO] [CHILD STDOUT] --- Logging error ---
+2025-07-29 22:09:13,580 [ERROR] [CHILD STDERR] Traceback (most recent call last):
+2025-07-29 22:09:13,581 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\logging\__init__.py", line 1110, in emit
+2025-07-29 22:09:13,581 [INFO] [CHILD STDOUT] msg = self.format(record)
+2025-07-29 22:09:13,582 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^
+2025-07-29 22:09:13,582 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\logging\__init__.py", line 953, in format
+2025-07-29 22:09:13,582 [INFO] [CHILD STDOUT] return fmt.format(record)
+2025-07-29 22:09:13,583 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^
+2025-07-29 22:09:13,583 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\logging\__init__.py", line 687, in format
+2025-07-29 22:09:13,584 [INFO] [CHILD STDOUT] record.message = record.getMessage()
+2025-07-29 22:09:13,584 [INFO] [CHILD STDOUT] ^^^^^^^^^^^^^^^^^^^
+2025-07-29 22:09:13,586 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\logging\__init__.py", line 377, in getMessage
+2025-07-29 22:09:13,586 [INFO] [CHILD STDOUT] msg = msg % self.args
+2025-07-29 22:09:13,587 [INFO] [CHILD STDOUT] ~~~~^~~~~~~~~~~
+2025-07-29 22:09:13,587 [ERROR] [CHILD STDERR] TypeError: not enough arguments for format string
+2025-07-29 22:09:13,587 [INFO] [CHILD STDOUT] Call stack:
+2025-07-29 22:09:13,587 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 441, in <module>
+2025-07-29 22:09:13,587 [INFO] [CHILD STDOUT] http_server.serve_forever()
+2025-07-29 22:09:13,588 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\werkzeug\serving.py", line 819, in serve_forever
+2025-07-29 22:09:13,588 [INFO] [CHILD STDOUT] super().serve_forever(poll_interval=poll_interval)
+2025-07-29 22:09:13,588 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 238, in serve_forever
+2025-07-29 22:09:13,588 [INFO] [CHILD STDOUT] self._handle_request_noblock()
+2025-07-29 22:09:13,588 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 317, in _handle_request_noblock
+2025-07-29 22:09:13,589 [INFO] [CHILD STDOUT] self.process_request(request, client_address)
+2025-07-29 22:09:13,589 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 348, in process_request
+2025-07-29 22:09:13,589 [INFO] [CHILD STDOUT] self.finish_request(request, client_address)
+2025-07-29 22:09:13,589 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 361, in finish_request
+2025-07-29 22:09:13,589 [INFO] [CHILD STDOUT] self.RequestHandlerClass(request, client_address, self)
+2025-07-29 22:09:13,591 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\socketserver.py", line 755, in __init__
+2025-07-29 22:09:13,591 [INFO] [CHILD STDOUT] self.handle()
+2025-07-29 22:09:13,591 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\werkzeug\serving.py", line 398, in handle
+2025-07-29 22:09:13,591 [INFO] [CHILD STDOUT] super().handle()
+2025-07-29 22:09:13,591 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\http\server.py", line 432, in handle
+2025-07-29 22:09:13,591 [INFO] [CHILD STDOUT] self.handle_one_request()
+2025-07-29 22:09:13,592 [INFO] [CHILD STDOUT] File "C:\Program Files\Python311\Lib\http\server.py", line 420, in handle_one_request
+2025-07-29 22:09:13,592 [INFO] [CHILD STDOUT] method()
+2025-07-29 22:09:13,592 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+2025-07-29 22:09:13,592 [INFO] [CHILD STDOUT] execute(self.server.app)
+2025-07-29 22:09:13,592 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\werkzeug\serving.py", line 331, in execute
+2025-07-29 22:09:13,592 [INFO] [CHILD STDOUT] application_iter = app(environ, start_response)
+2025-07-29 22:09:13,592 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 1498, in __call__
+2025-07-29 22:09:13,594 [INFO] [CHILD STDOUT] return self.wsgi_app(environ, start_response)
+2025-07-29 22:09:13,594 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 1473, in wsgi_app
+2025-07-29 22:09:13,594 [INFO] [CHILD STDOUT] response = self.full_dispatch_request()
+2025-07-29 22:09:13,594 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 880, in full_dispatch_request
+2025-07-29 22:09:13,594 [INFO] [CHILD STDOUT] rv = self.dispatch_request()
+2025-07-29 22:09:13,594 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\flask\app.py", line 865, in dispatch_request
+2025-07-29 22:09:13,594 [INFO] [CHILD STDOUT] return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+2025-07-29 22:09:13,595 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 55, in callback
+2025-07-29 22:09:13,595 [INFO] [CHILD STDOUT] handler.handle(body, signature) # 調用handler的handle方法來處理請求
+2025-07-29 22:09:13,595 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\webhook.py", line 278, in handle
+2025-07-29 22:09:13,595 [INFO] [CHILD STDOUT] self.__invoke_func(func, event, payload)
+2025-07-29 22:09:13,595 [INFO] [CHILD STDOUT] File "C:\Users\ASUS\AppData\Roaming\Python\Python311\site-packages\linebot\webhook.py", line 290, in __invoke_func
+2025-07-29 22:09:13,597 [INFO] [CHILD STDOUT] func(event)
+2025-07-29 22:09:13,597 [INFO] [CHILD STDOUT] File "H:\My Drive\SWBS_Mother\SWBS\Linebot\appv3.0.5\appV3.0.5.py", line 413, in handle_message
+2025-07-29 22:09:13,597 [INFO] [CHILD STDOUT] logging.info("Dispatching handler for status:'%s' for user_id:%s", status)
+2025-07-29 22:09:13,597 [INFO] [CHILD STDOUT] Message: "Dispatching handler for status:'%s' for user_id:%s"
+2025-07-29 22:09:13,597 [INFO] [CHILD STDOUT] Arguments: ('Fs',)
+2025-07-29 22:09:13,790 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:09:13] "POST /callback HTTP/1.1" 200 -
+2025-07-29 22:09:16,664 [INFO] [CHILD STDOUT] Received body: {"destination":"U8cdcd70cd74f89bf21c3680faad1dd57","events":[{"type":"postback","postback":{"data":"action=@Adm_func"},"webhookEventId":"01K1B8814KCE77X2KDE4JVGPKS","deliveryContext":{"isRedelivery":false},"timestamp":1753798148823,"source":{"type":"user","userId":"Uaf14190a82dbcf01d7b0e3bfb2e003e2"},"replyToken":"1d7beca6c3024883b6836661830675a0","mode":"active"}]}
+2025-07-29 22:09:16,665 [INFO] [CHILD STDOUT] Handling follow event from user_id=Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:09:16,666 [INFO] [CHILD STDOUT] running function:@Adm_func
+2025-07-29 22:09:16,809 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:09:16] "POST /callback HTTP/1.1" 200 -
+2025-07-29 22:09:18,907 [INFO] [CHILD STDOUT] Received body: {"destination":"U8cdcd70cd74f89bf21c3680faad1dd57","events":[{"type":"message","message":{"type":"text","id":"572047444834516993","quoteToken":"CH9cwLN-PZF-eZbW78f5u2WCp2mrmuRVdbTZ5t8hVHrgrj9QvPuLcf_y8v_g7PoVzB7DmlQFUdVLorLzx333FQ7s24Yja2Fw1jnfAOVXhvH8RGzIs0-Kj-hZDi9g5zQ9LI64U3EK6QXnn7S5phRuPw","text":"@userList"},"webhookEventId":"01K1B8839QYV04T1XSX5SFSHJ4","deliveryContext":{"isRedelivery":false},"timestamp":1753798151445,"source":{"type":"user","userId":"Uaf14190a82dbcf01d7b0e3bfb2e003e2"},"replyToken":"3bb1781a479d45e89963a8e2a49d7dc7","mode":"active"}]}
+2025-07-29 22:09:18,908 [INFO] [CHILD STDOUT] Handling message event from user_id:Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:09:18,909 [INFO] [CHILD STDOUT] Existing user: user_id=Uaf14190a82dbcf01d7b0e3bfb2e003e2 with status='Fs'. Dispatching handler.
+2025-07-29 22:09:19,042 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:09:19] "POST /callback HTTP/1.1" 200 -
+2025-07-29 22:09:20,309 [INFO] [CHILD STDOUT] Request received: /admin/Uaf14190a82dbcf01d7b0e3bfb2e003e2
+2025-07-29 22:09:20,351 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:09:20] "GET /admin/Uaf14190a82dbcf01d7b0e3bfb2e003e2 HTTP/1.1" 200 -
+2025-07-29 22:09:20,665 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:09:20,669 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:09:20] "GET /search_users?query= HTTP/1.1" 200 -
+2025-07-29 22:09:24,509 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:09:24,511 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:09:24] "GET /search_users?query=&isAdmin=true HTTP/1.1" 200 -
+2025-07-29 22:09:24,599 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:09:24,602 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:09:24] "GET /search_users?query=&isAdmin=true HTTP/1.1" 200 -
+2025-07-29 22:09:25,272 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:09:25,276 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:09:25] "GET /search_users?query=&isAdmin=false HTTP/1.1" 200 -
+2025-07-29 22:09:25,378 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:09:25,381 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:09:25] "GET /search_users?query=&isAdmin=false HTTP/1.1" 200 -
+2025-07-29 22:09:26,959 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:09:26,963 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:09:26] "GET /search_users?query=&isAdmin=true HTTP/1.1" 200 -
+2025-07-29 22:09:27,081 [INFO] [CHILD STDOUT] Request received: /search_users
+2025-07-29 22:09:27,083 [INFO] [CHILD STDOUT] 127.0.0.1 - - [29/Jul/2025 22:09:27] "GET /search_users?query=&isAdmin=true HTTP/1.1" 200 -
+2025-07-29 22:12:52,465 [INFO] [CHILD STDOUT] ngrok URL: https://942431f3cc42.ngrok-free.app/callback
