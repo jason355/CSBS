@@ -188,7 +188,7 @@
                 }
             } catch (error) {
                 console.error('Error fetching users:', error);
-                alert('Failed to load users. Please try again.'); // Using alert for simplicity, consider custom modal
+                alert('Failed to load users:\n' + (error.stack || error));
             }
         }
 
