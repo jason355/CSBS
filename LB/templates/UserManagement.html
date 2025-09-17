@@ -148,6 +148,18 @@
 
 
                 const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const contentType = response.headers.get("content-type") || "";
+                if (!contentType.includes("application/json")) {
+                    const text = await response.text(); // 先讀文字看看是什麼
+                    throw new alert(`Expected JSON, but got: ${text.substring(0, 200)}...`);
+                }
+
+
                 const users = await response.json();
 
                 usersList.innerHTML = ''; // Clear current list
