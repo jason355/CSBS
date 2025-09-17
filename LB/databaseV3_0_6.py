@@ -1,4 +1,4 @@
-# version 3.0.5
+# version 3.0.6
 
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, Text, DateTime, update, SmallInteger, desc
 from sqlalchemy.ext.declarative import declarative_base
@@ -355,6 +355,19 @@ class mydatabase:
         except Exception as e:
             raise RuntimeError(f"Error 1000: From get_sended_data() {e}")
         
+
+    def del_class(self, classCode):
+        try:
+            with self.Session() as session:
+                result = session.query(class_list).filter(class_list.classCode == classCode).one_or_none()
+                if result:
+                    session.delete(result)
+                    session.commit()
+                    return True
+                else:
+                    return False
+        except Exception as e:
+            raise RuntimeError(f"Error 1021: From del_class() {e}")
 # mydatabase = mydatabase()
 
-# print(mydatabase.GetAllTeacherID())
+# print(mydatabase.del_class("531"))

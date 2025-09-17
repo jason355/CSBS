@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}班級列表{% endblock %}
+
+{% block content %}
+<style>
+    /* General Styling for a cleaner look */
+    .container {
+        padding: 20px;
+        background-color: #2a2a2a; /* Slightly darker than body for content area */
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        max-width: 900px;
+        margin: 40px auto; /* Center the container and add vertical space */
+    }
+
+    h2 {
+        color: #e0e0e0; /* Lighter grey for headings */
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2.2em;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    /* Table Styling */
+    .modern-table {
+        width: 100%;
+        border-collapse: separate; /* Use separate to allow border-radius on cells */
+        border-spacing: 0;
+        margin-top: 20px;
+        overflow: hidden; /* Ensures rounded corners on the table itself */
+    }
+
+    .modern-table th,
+    .modern-table td {
+        padding: 15px 20px;
+        text-align: left;
+        border: none; /* Remove default borders */
+    }
+
+    .modern-table thead {
+        background-color: #3f51b5; /* A vibrant primary color for the header */
+        color: white;
+    }
+
+    .modern-table th {
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.9em;
+    }
+
+    /* Rounded corners for table header cells */
+    .modern-table th:first-child {
+        border-top-left-radius: 8px;
+    }
+    .modern-table th:last-child {
+        border-top-right-radius: 8px;
+    }
+
+    .modern-table tbody tr {
+        background-color: #333; /* Darker background for rows */
+        transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+    }
+
+    .modern-table tbody tr:nth-child(even) {
+        background-color: #2e2e2e; /* Alternate row color for readability */
+    }
+
+    .modern-table tbody tr:hover {
+        background-color: #444; /* Lighter on hover */
+        transform: translateY(-2px); /* Subtle lift effect */
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4); /* Enhanced shadow on hover */
+    }
+
+    .modern-table td {
+        color: #c0c0c0; /* Light grey for text */
+        border-bottom: 1px solid #4a4a4a; /* Subtle separator between rows */
+    }
+
+    .modern-table tbody tr:last-child td {
+        border-bottom: none; /* No border for the last row's cells */
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .container {
+            margin: 20px;
+            padding: 15px;
+        }
+        .modern-table thead {
+            display: none; /* Hide table headers on small screens */
+        }
+        .modern-table, .modern-table tbody, .modern-table tr, .modern-table td {
+            display: block; /* Make table elements behave like blocks */
+            width: 100%;
+        }
+        .modern-table tr {
+            margin-bottom: 15px;
+            border-bottom: 3px solid #3f51b5; /* Stronger separator between 'rows' (now blocks) */
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .modern-table td {
+            text-align: right;
+            padding-left: 50%;
+            position: relative;
+            border-bottom: 1px solid #4a4a4a;
+        }
+        .modern-table td:last-child {
+            border-bottom: none;
+        }
+        .modern-table td::before {
+            content: attr(data-label); /* Use data-label for pseudo-elements */
+            position: absolute;
+            left: 15px;
+            width: calc(50% - 30px);
+            padding-right: 10px;
+            white-space: nowrap;
+            text-align: left;
+            font-weight: bold;
+            color: #888;
+        }
+    }
+</style>
+
+<div class="container">
+    <h2>CSBS 班級列表</h2>
+
+    <table class="modern-table">
+        <thead>
+            <tr>
+                <th>班級代碼</th>
+                <th>班級名稱</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(length) %}
+            <tr>
+                <td data-label="班級代碼">{{ codeList[i] }}</td>
+                <td data-label="班級名稱">{{ nameList[i] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

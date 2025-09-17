@@ -1,4 +1,4 @@
-# version 3.0.5
+# version 3.0.6
 import subprocess
 import time
 import os
@@ -20,7 +20,7 @@ logging.basicConfig(
 
 logging.info("--- RESETBOT START ---")
 
-relative_path = ".\\appV3.0.5.py"
+relative_path = ".\\appV3.0.6.py"
 script_dir = os.path.dirname(os.path.abspath(__file__))
 absolute_path = os.path.join(script_dir, relative_path)
 absolute_path = str(Path(absolute_path))

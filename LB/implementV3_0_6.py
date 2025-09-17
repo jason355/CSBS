@@ -1,14 +1,14 @@
-# version 3.0.5
+# version 3.0.6
 import re, json, sys, requests, subprocess
 from linebot.models import  TextSendMessage, PostbackTemplateAction, TemplateSendMessage, ButtonsTemplate, PostbackAction, DatetimePickerTemplateAction,MessageAction, URIAction, QuickReply, QuickReplyButton
 from datetime import date, timedelta
-import imple_toolV3_0_5 as t
+import imple_toolV3_0_6 as t
 from datetime import datetime
 from sqlalchemy import exc
 
 
 
-errorText = "*An Error in implementV3.0.5"
+errorText = "*An Error in implementV3.0.6"
 contactInfo = "{contactInfo}"
 error_messages  = []
 global errorIndex
@@ -115,6 +115,29 @@ class Bot():
     def del_user(self, user_id):
         """Delet User through web page"""
         return self.db.DelTeacherData(user_id)
+
+
+    def get_class_data(self):
+        """Returns a list of class codes and names from the mock data."""
+        return self.db.getClassCodeList(), self.db.getClassNameList()
+
+    def search_class_data(self, query):
+        """Mocks a search function."""
+        CLASSES = self.db.getClassDic()
+        query = query.lower()
+        codes, names = [], []
+        for code, data in CLASSES.items():
+            if query in code.lower() or query in data.lower():
+                codes.append(code)
+                names.append(data)
+        return codes, names
+
+    def delete_class(self, class_code):
+        """Mocks a class deletion."""
+        CLASSES = self.db.getClassDic()
+        if class_code in CLASSES:
+            ack = self.db.del_class(class_code)
+        return ack
 
 
     def load_users(self):
@@ -231,8 +254,8 @@ class Bot():
                             text="@resetBot"
                         ),
                         MessageAction(
-                            label='教師列表',
-                            text='@userList'
+                            label='系統管理',
+                            text='@Management'
                         ),
                         MessageAction(
                             label='刪除資料庫資料',
@@ -545,17 +568,19 @@ class Bot():
 
                         hash_text = data['name'] + data['lineID'] + data['office'] + data['time'] + data['content']
                         data['hash'] = t.sha1_hash(hash_text)
-
-                        if "611" not in self.users[user_id].data['classLs'] or "6" not in self.users[user_id].data["classLs"]:
-                            print("True")
-                            data['des_class'] = 1
-                            data['des_grade'] = "61"
-                            try:
-                                self.db.insertData(data)
-                            except Exception as e:
-                                error = f"{errorText}-confirm_yes-self.db.insertData()-adding 611 to database\n{e}"
-                                print(error)
-                                self.addError(error)    
+                        if "6" not in self.users[user_id].data["classLs"]:
+                            classCode = self.db.getClassCodeList()
+                            startWithSix = [c for c in classCode if c[0] == "6"]
+                            for CLASS in startWithSix:
+                                if CLASS not in self.users[user_id].data['classLs']:
+                                    data['des_class'] = CLASS[2]
+                                    data['des_grade'] = CLASS[0:2]
+                                    try:
+                                        self.db.insertData(data)
+                                    except Exception as e:
+                                        error = f"{errorText}-confirm_yes-self.db.insertData()-adding 611 to database\n{e}"
+                                        print(error)
+                                        self.addError(error)    
                                 
                         if len(self.users[user_id].data['classLs']) == 0:
                             data['des_class'] = self.users[user_id].data['des_class']
@@ -959,7 +984,6 @@ class Bot():
                     else:
                         if group in database_class_list:
                             if int(group[0:1]) < 4: # 區分國高中 
-                                # print(group)
                                 if str(int(group[0:2]) - 9) not in number_groups:
                                     self.users[user_id].data['classStr'] += group + " "
                                     self.users[user_id].data['classLs'].append(group)
@@ -981,7 +1005,6 @@ class Bot():
                             self.users[user_id].data['classLs'] = []
                             canSend = False
                             break
-                        print(f"str {self.users[user_id].data['classStr']}")
                 else:
                     reply_message = "請輸入有效代碼"
                     self.reply_cancel(event, reply_message)
@@ -1197,7 +1220,7 @@ class Bot():
                 print(oe)
                 self.api.reply_message(event.reply_token, TextSendMessage(text="⚠️伺服器連線錯誤，請在試一次"))
             except Exception as e:
-                error = f"{errorText}-implementV2_9-poostback_US()-self.db.isAdmin()\n{e}"
+                error = f"{errorText}-poostback_US()-self.db.isAdmin()\n{e}"
                 print(error)       
                 self.addError(error)
                 reply_message = f"⚠️資料庫錯誤，請再試一次或是洽 {contactInfo}"
@@ -1688,14 +1711,15 @@ class Bot():
                     )
                     self.api.reply_message(event.reply_token, message)
 
-                elif text == "@userList":
+                elif text == "@Management":
                     quick_reply = QuickReply(items=[
-                        QuickReplyButton(action=URIAction(label="查看教師列表", uri=f"{self.webhook_url[:-8]}/admin/{user_id}"))
+                        QuickReplyButton(action=URIAction(label="管理使用者", uri=f"{self.webhook_url[:-8]}admin/management/users/{user_id}")),
+                        QuickReplyButton(action=URIAction(label="管理班級", uri=f"{self.webhook_url[:-8]}admin/management/classroomMgmt/{user_id}"))
                     ])
                     
                     # 回應訊息，並附上 Quick Reply 按鈕
                     reply_message = TextSendMessage(
-                        text="點擊按鈕查看教師列表",
+                        text="請選擇管理項目",
                         quick_reply=quick_reply
                     )
                     self.api.reply_message(event.reply_token, reply_message)

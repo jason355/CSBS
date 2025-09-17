@@ -141,7 +141,7 @@
         // Function to fetch and render users
         async function fetchAndRenderUsers(query = '', isAdminFilter = null) {
             try {
-                let url = `/search_users?query=${encodeURIComponent(query)}`;
+                let url = `/api/search_users?query=${encodeURIComponent(query)}`;
                 if (isAdminFilter !== null) {
                     url += `&isAdmin=${isAdminFilter}`;
                 }
@@ -230,7 +230,7 @@
         confirmDeleteBtn.addEventListener('click', async () => {
             if (currentUserToDelete) {
                 try {
-                    const response = await fetch(`/delete_user/${currentUserToDelete}`, {
+                    const response = await fetch(`/api/delete_user/${currentUserToDelete}`, {
                         method: 'POST', // Using POST for deletion as it's simpler with forms/buttons
                         headers: {
                             'Content-Type': 'application/json',
@@ -238,7 +238,7 @@
                     });
                     const result = await response.json();
                     if (result.success) {
-                        fetchAndRenderUsers(searchInput.value); // Re-render list
+                        fetchAndRenderUsers(searchInput.value, currentAdminFilter); // Re-render list
                     } else {
                         alert('Error deleting user: ' + result.message);
                     }

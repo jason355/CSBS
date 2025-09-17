@@ -1,6 +1,6 @@
 import os, sys
-from implementV3_0_5 import Teacher, Bot
-import databaseV3_0_5 as database
+from implementV3_0_6 import Teacher, Bot
+import databaseV3_0_6 as database
 from urllib.parse import parse_qsl
 from linebot.models import  FollowEvent, MessageEvent, TextMessage, TextSendMessage, UnfollowEvent, PostbackEvent
 from linebot.exceptions import InvalidSignatureError
@@ -32,7 +32,7 @@ handler = WebhookHandler(channel_secret) # 建立 webhook 實例
 users = {} # 建立 users 字典
 
 
-errorText = "*An Error in appV3.0.5" # 錯誤訊息基本文字
+errorText = "*An Error in appV3.0.6" # 錯誤訊息基本文字
 global errorIndex # 錯誤訊息索引值紀錄
 errorIndex = 1 # 初始化索引值
 
@@ -106,6 +106,60 @@ def showClassList():
         logging.error(error, exc_info=True)
         Manager.addError(error)
 
+@app.route('/admin/management/classroomMgmt/<user_id>')
+def classroomMgmt(user_id):
+    """Serves the main admin page."""
+    logging.info(f"Request received: /classroomMgmt/{user_id}")
+    try:
+        if db.isAdmin(user_id):
+            return render_template('classroomMgmt.html')
+        else:
+            return render_template("forbidden.html")
+    except Exception as e:
+        error = f"{errorText}-classroomMgmt\n{e}"
+        logging.error(error, exc_info=True)
+        Manager.addError(error)
+
+@app.route('/api/<user_id>/classes', methods=['GET'])
+def get_classes(user_id):
+    """
+    API endpoint to get class data.
+    Accepts an optional 'q' query parameter for searching.
+    Returns a JSON list of class objects.
+    """
+    if db.isAdmin(user_id):
+        query = request.args.get('q', '').strip()
+        
+        if query:
+            code_list, name_list = Manager.search_class_data(query)
+        else:
+            code_list, name_list = Manager.get_class_data()
+        
+        # Combine the lists into a JSON-friendly format
+        class_list = [{'code': code_list[i], 'name': name_list[i]} for i in range(len(code_list))]
+        return jsonify(class_list)
+
+@app.route('/api/classes/<class_code>/<user_id>', methods=['DELETE'])
+def delete_class_endpoint(class_code, user_id):
+    """
+    API endpoint to delete a class by its code.
+    This is a safe way to handle deletion as it uses the DELETE method.
+    """
+    logging.info(f"Request received: /api/classes/{class_code}/{user_id}")
+    try:
+        if db.isAdmin(user_id):
+            if Manager.delete_class(class_code):
+                return jsonify({'message': f'Class {class_code} deleted successfully.'}), 200
+            else:
+                return jsonify({'error': f'Class {class_code} not found.'}), 404
+        else:
+            return jsonify({'error': 'Unauthorized'}), 401
+    except Exception as e:
+        error = f"{errorText}-delete_class_enddpoint\n{e}"
+        logging.error(error, exc_info=True)
+        Manager.addError(error)
+
+
 # 及時廣播訊息狀態
 @app.route('/realtimedata/<user_id>', methods=['GET'])
 def realtimedata(user_id):
@@ -116,7 +170,7 @@ def realtimedata(user_id):
             username = "使用者"
         else:
             username = Manager.users[user_id].name
-        return render_template("index.html", username = username, data = data)
+        return render_template("RealtimeMessage.html", username = username, data = data)
     except Exception as e:
         error = f"{errorText}-realtimedata\n{e}"
         logging.error(error, exc_info=True)
@@ -127,20 +181,20 @@ def realtimedata(user_id):
 
 # --- Flask Routes ---
 
-@app.route('/admin/<user_id>')
+@app.route('/admin/management/users/<user_id>')
 def manage_users(user_id):
     """Renders the main user management page."""
-    logging.info("Request received: /admin/%s", user_id)
+    logging.info("Request received: /admin/management/users/%s", user_id)
     if db.isAdmin(user_id):
         users = Manager.load_users()
-        return render_template('index-2.html', users=users)
+        return render_template('UserManagement.html', users=users)
     else:
         return render_template('forbidden.html')
 
-@app.route('/delete_user/<user_id>', methods=['POST'])
+@app.route('/api/delete_user/<user_id>', methods=['POST'])
 def delete_user(user_id):
     """Deletes a user from the database by ID."""
-    logging.info("Request received: /delete_user/%s", user_id)
+    logging.info("Request received: /api/delete_user/%s", user_id)
     users = Manager.load_users()
     initial_len = len(users)
     # Filter out the user to be deleted
@@ -152,10 +206,10 @@ def delete_user(user_id):
     ack = Manager.del_user(user_id)
     return jsonify({'success': ack, 'message': 'User deleted successfully'})
 
-@app.route('/search_users', methods=['GET'])
+@app.route('/api/search_users', methods=['GET'])
 def search_users():
     """Searches for users by name or email."""
-    logging.info("Request received: /search_users")
+    logging.info("Request received: /api/search_users")
     query = request.args.get('query', '').lower()
 
     # Get isAdmin filter parameter

@@ -3,6 +3,7 @@ import regex, hashlib
 from datetime import datetime, time
 import copy
 
+errorText = "*An Error in imple_toolV3_0_6"
 class Template:
     @staticmethod
     def get_dataTemplate():
@@ -21,9 +22,6 @@ class Template:
     def get_AdmConPattern():
         return r'(\d+-\d+|\d+)'
 
-errorText = "*An Error in imple_toolV3_0_5"
-
-
 # 產生 SHA-1
 def sha1_hash(string):
     string_bytes = string.encode('utf-8')
@@ -31,9 +29,6 @@ def sha1_hash(string):
     sha1.update(string_bytes)
     hashed_string = sha1.hexdigest()
     return hashed_string
-
-
-
 
 # 格式化班級
 def format_class(input, db):

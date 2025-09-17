@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSBS Classroom Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-6">
+
+  <div class="w-full max-w-5xl">
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-sky-400 drop-shadow-md">
+        CSBS Classroom Dashboard
+      </h1>
+      <p class="text-gray-400 mt-2">Manage and search your classes with ease</p>
+    </div>
+
+    <!-- Search Card -->
+    <div class="bg-gray-800/80 backdrop-blur-md p-6 rounded-2xl shadow-lg mb-8">
+      <div class="flex flex-col sm:flex-row gap-4">
+        <input 
+          id="search-input"
+          type="text"
+          placeholder="🔍  Search for a class..."
+          class="flex-grow px-4 py-3 rounded-xl bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+        >
+        <button 
+          onclick="fetchClasses()" 
+          class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-sky-500 text-white font-semibold rounded-xl hover:from-indigo-600 hover:to-sky-600 transition shadow-md"
+        >
+          Search
+        </button>
+      </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="bg-gray-800/80 backdrop-blur-md p-6 rounded-2xl shadow-lg overflow-x-auto">
+      <table class="min-w-full text-left text-gray-200">
+        <thead>
+          <tr class="border-b border-gray-700">
+            <th class="py-3 px-4 text-sm font-semibold uppercase tracking-wide">Class Code</th>
+            <th class="py-3 px-4 text-sm font-semibold uppercase tracking-wide">Class Name</th>
+            <th class="py-3 px-4 text-sm font-semibold uppercase tracking-wide text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="class-table-body" class="divide-y divide-gray-700">
+          <!-- Dynamic rows -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Status Message -->
+    <div id="status-message" class="mt-6 p-4 rounded-xl text-center font-medium hidden"></div>
+  </div>
+
+  <script>
+    const classTableBody = document.getElementById('class-table-body');
+    const searchInput = document.getElementById('search-input');
+    const statusMessage = document.getElementById('status-message');
+    const user_id = window.location.pathname.split('/').filter(Boolean).pop();
+    function showMessage(message, type) {
+      statusMessage.textContent = message;
+      statusMessage.className = 'mt-6 p-4 rounded-xl text-center font-medium';
+      if (type === 'success') {
+        statusMessage.classList.add('bg-green-600', 'text-white');
+      } else if (type === 'error') {
+        statusMessage.classList.add('bg-red-600', 'text-white');
+      } else {
+        statusMessage.classList.add('bg-indigo-600', 'text-white');
+      }
+      statusMessage.classList.remove('hidden');
+      setTimeout(() => statusMessage.classList.add('hidden'), 3000);
+    }
+
+    async function fetchClasses() {
+      const query = searchInput.value;
+      try {
+        const response = await fetch(`/api/${user_id}/classes?q=${encodeURIComponent(query)}`);
+        if (!response.ok) throw new Error('Failed to fetch class data.');
+        const classes = await response.json();
+        renderTable(classes);
+      } catch (error) {
+        showMessage('Error fetching classes.', 'error');
+        console.error(error);
+      }
+    }
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();   // 避免表單或其他預設行為
+            fetchClasses();
+        }
+    });
+
+
+    function renderTable(classes) {
+      classTableBody.innerHTML = '';
+      if (!classes.length) {
+        classTableBody.innerHTML = `<tr><td colspan="3" class="py-4 px-4 text-center text-gray-400">No classes found.</td></tr>`;
+        return;
+      }
+      classes.forEach(cls => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="py-3 px-4 text-sm font-medium">${cls.code}</td>
+          <td class="py-3 px-4 text-sm">${cls.name}</td>
+          <td class="py-3 px-4 text-sm text-right">
+            <button 
+              onclick="deleteClass('${cls.code}')"
+              class="px-4 py-2 bg-gradient-to-r from-rose-500 to-red-600 text-white rounded-lg hover:from-rose-600 hover:to-red-700 transition shadow-sm">
+              Delete
+            </button>
+          </td>
+        `;
+        classTableBody.appendChild(row);
+      });
+    }
+
+    async function deleteClass(code) {
+      if (!confirm(`Delete class ${code}?`)) return;
+      try {
+        const res = await fetch(`/api/classes/${code}/${user_id}`, { method: 'DELETE' });
+        if (!res.ok) throw new Error((await res.json()).error);
+        showMessage(`Class ${code} deleted successfully.`, 'success');
+        fetchClasses();
+      } catch (err) {
+        showMessage(`Error: ${err.message}`, 'error');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchClasses);
+  </script>
+</body>
+</html>

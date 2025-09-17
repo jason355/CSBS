@@ -20,3 +20,4 @@ Database Error codes:
 1018: From getClassNameList()
 1019: From getClassCodeList()
 1020: From __init__()
+1021: From del_class()
